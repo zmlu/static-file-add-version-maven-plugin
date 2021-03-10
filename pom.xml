@@ -13,8 +13,10 @@
 	<url>https://github.com/zmlu/static-file-add-version-maven-plugin</url>
 	<licenses>
 		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<name>Server Side Public License</name>
+			<url>https://www.mongodb.com/licensing/server-side-public-license</url>
+			<distribution>repo</distribution>
+			<comments>A not business-friendly OSS license</comments>
 		</license>
 	</licenses>
 	<developers>
@@ -26,13 +28,27 @@
 	<scm>
 		<connection>scm:git:git@github.com:zmlu/static-file-add-version-maven-plugin.git</connection>
 		<developerConnection>scm:git:git@github.com:zmlu/static-file-add-version-maven-plugin.git</developerConnection>
-		<url>git@github.com:zmlu/static-file-add-version-maven-plugin.git</url>
+		<url>https://github.com/zmlu/static-file-add-version-maven-plugin</url>
 	</scm>
 
 	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<developers>
+		<developer>
+			<name>luzhoumin</name>
+			<id>luzhoumin</id>
+			<email>zmlu1996@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+8</timezone>
+		</developer>
+	</developers>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -169,11 +185,11 @@
 			</build>
 			<distributionManagement>
 				<snapshotRepository>
-					<id>oss</id>
+					<id>ossrh</id>
 					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 				</snapshotRepository>
 				<repository>
-					<id>oss</id>
+					<id>ossrh</id>
 					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 				</repository>
 			</distributionManagement>
