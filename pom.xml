@@ -2,15 +2,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.jacob.maven.plugin</groupId>
+	<groupId>com.github.zmlu.maven.plugin</groupId>
 	<artifactId>static-file-add-version-maven-plugin</artifactId>
 	<version>0.0.1</version>
 	<packaging>maven-plugin</packaging>
 
 
 	<name>static-file-add-version-maven-plugin</name>
-	<description>静态资源添加版本号maven插件</description>
-	<url>https://aah.im</url>
+	<description>static resource add version number maven plugin</description>
+	<url>https://github.com/zmlu/static-file-add-version-maven-plugin</url>
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
