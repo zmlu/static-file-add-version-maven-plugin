@@ -28,3 +28,7 @@ local.properties
 # Locally stored "Eclipse launch configurations"
 *.launch
 
+/.idea/
+
+.DS_Store
+/static-file-add-version-maven-plugin.iml

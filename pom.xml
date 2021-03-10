@@ -23,11 +23,11 @@
 			<email>zmlu1996@gmail.com</email>
 		</developer>
 	</developers>
-<!--	<scm>-->
-<!--		<connection>scm:git:git@github.com:byzy/jcv-maven-plugin.git</connection>-->
-<!--		<developerConnection>scm:git:git@github.com:byzy/jcv-maven-plugin.git</developerConnection>-->
-<!--		<url>git@github.com:byzy/jcv-maven-plugin.git</url>-->
-<!--	</scm>-->
+	<scm>
+		<connection>scm:git:git@github.com:zmlu/static-file-add-version-maven-plugin.git</connection>
+		<developerConnection>scm:git:git@github.com:zmlu/static-file-add-version-maven-plugin.git</developerConnection>
+		<url>git@github.com:zmlu/static-file-add-version-maven-plugin.git</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
