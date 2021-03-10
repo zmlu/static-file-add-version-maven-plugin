@@ -1,6 +1,6 @@
-package com.jacob.maven.plugin.utils;
+package com.echemi.maven.plugin.utils;
 
-import static com.jacob.maven.plugin.utils.BaseUtils.*;
+import static com.echemi.maven.plugin.utils.BaseUtils.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,15 +14,15 @@ import java.util.List;
 
 /**
  * @Package 文件工具
- *          com.iqarr.maven.plugin.utils
+ *          com.echemi.maven.plugin.utils
  * @ClassName:
  *             FileUtils
  * @since
  *        V1.0
  * @author
- *         zhangyong
+ *         jacob
  * @date
- *       2017/01/06-14:23:18
+ *       2021/03/06-14:23:18
  * @version
  *          V1.0
  */

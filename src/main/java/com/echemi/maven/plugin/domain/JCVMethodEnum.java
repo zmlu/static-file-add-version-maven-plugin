@@ -1,16 +1,16 @@
-package com.jacob.maven.plugin.domain;
+package com.echemi.maven.plugin.domain;
 
 /**
  * @Package
- *          com.iqarr.maven.plugin
+ *          com.echemi.maven.plugin
  * @ClassName:
  *             JCVMethodEnum
  * @since
  *        V1.0
  * @author
- *         zhangyong
+ *         jacob
  * @date
- *       2017/01/06-14:13:36
+ *       2021/03/06-14:13:36
  * @version
  *          V1.0
  */

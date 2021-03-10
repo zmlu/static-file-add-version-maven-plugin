@@ -1,29 +1,20 @@
-package com.jacob.maven.plugin.utils;
+package com.echemi.maven.plugin.utils;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.junit.Test;
 
-import com.jacob.maven.plugin.JCVFactory;
-import com.jacob.maven.plugin.domain.JCVFileInfo;
-import com.jacob.maven.plugin.domain.JCVMethodEnum;
-
 /**  
 * @Package 
-*	 com.iqarr.maven.plugin.utils
+*	 com.echemi.maven.plugin.utils
 * @ClassName: 
 *	 JCVFactoryTest  
 * @since 
 *	  V1.0
 * @author 
-*		zhangyong   
+*		jacob   
 * @date 
-*		2017/01/07-13:56:29
+*		2021/03/07-13:56:29
 * @version 
 *		V1.0      
 */

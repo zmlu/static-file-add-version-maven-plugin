@@ -1,4 +1,4 @@
-package com.jacob.maven.plugin.exception;
+package com.echemi.maven.plugin.exception;
 
 import org.apache.maven.plugin.logging.Log;
 import org.mozilla.javascript.ErrorReporter;
@@ -6,13 +6,13 @@ import org.mozilla.javascript.EvaluatorException;
 
 /**  
 * @Package 
-*	 com.iqarr.maven.plugin.exception
+*	 com.echemi.maven.plugin.exception
 * @ClassName: 
 *	 YUIException  
 * @since 
 *	  V1.0
 * @author 
-*		zhangyong   
+*		jacob   
 * @date 
 *		2017/02/05-11:36:45
 * @version 

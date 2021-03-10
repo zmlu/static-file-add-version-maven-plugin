@@ -1,14 +1,14 @@
-package com.jacob.maven.plugin.domain;
+package com.echemi.maven.plugin.domain;
 
 /**
  *   document position .
  *
- * @author 		zhangyong   
+ * @author 		jacob   
  * @version 		V1.0
  * @since 	  V1.0
- * @Package 	 com.iqarr.maven.plugin.domain
+ * @Package 	 com.echemi.maven.plugin.domain
  * @ClassName: 	 DocPosition  
- * @date 		2017/01/11-14:14:29
+ * @date 		2021/03/11-14:14:29
  */
 public class DocPosition {
     

@@ -1,15 +1,15 @@
-package com.jacob.maven.plugin.domain;
+package com.echemi.maven.plugin.domain;
 
 /**  
  * yui全局配置文件
 * @Package 
-*	 com.iqarr.maven.plugin.domain
+*	 com.echemi.maven.plugin.domain
 * @ClassName: 
 *	 YUIConfig  
 * @since 
 *	  V1.0
 * @author 
-*		zhangyong   
+*		jacob   
 * @date 
 *		2017/02/05-14:22:51
 * @version 

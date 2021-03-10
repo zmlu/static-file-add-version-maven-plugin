@@ -24,9 +24,9 @@
 	</executions>
 </plugin>
 <plugin>
-	<groupId>com.jacob.maven.plugin</groupId>
+	<groupId>com.echemi.maven.plugin</groupId>
 	<artifactId>static-file-add-version-maven-plugin</artifactId>
-	<version>${version}</version>
+	<version>0.0.1</version>
 	<executions>
 		<execution>
 			<phase>prepare-package</phase>
@@ -36,8 +36,8 @@
 		</execution>
 	</executions>
 	<configuration>
-		<cdnJsElName>\${webRootStaticCdn}</cdnJsElName>
-		<cdnCssElName>\${webRootStaticCdn}</cdnCssElName>
+		<cdnJsElName>${webRootStaticCdn}</cdnJsElName>
+		<cdnCssElName>${webRootStaticCdn}</cdnCssElName>
 		<elNameIncludePath>static_v3</elNameIncludePath>
 		<suffixs>
 			<param>jsp</param>

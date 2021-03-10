@@ -1,8 +1,8 @@
-package com.jacob.maven.plugin;
+package com.echemi.maven.plugin;
 
-import com.jacob.maven.plugin.domain.*;
-import com.jacob.maven.plugin.exception.YUIException;
-import com.jacob.maven.plugin.utils.FileUtils;
+import com.echemi.maven.plugin.domain.*;
+import com.echemi.maven.plugin.exception.YUIException;
+import com.echemi.maven.plugin.utils.FileUtils;
 import com.yahoo.platform.yui.compressor.CssCompressor;
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 import org.apache.maven.plugin.logging.Log;
@@ -14,15 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.jacob.maven.plugin.utils.BaseUtils.checkStrIsInList;
-import static com.jacob.maven.plugin.utils.HtmlUtils.getHtmllabDocposition;
+import static com.echemi.maven.plugin.utils.BaseUtils.checkStrIsInList;
+import static com.echemi.maven.plugin.utils.HtmlUtils.getHtmllabDocposition;
 
 /**
- * @author zhangyong
+ * @author jacob
  * @version V1.0
- * @Package com.iqarr.maven.plugin
+ * @Package com.echemi.maven.plugin
  * @ClassName: JCVFactory
- * @date 2017/01/11-11:15:56
+ * @date 2021/03/11-11:15:56
  * @since V1.0
  */
 public class JCVFactory {

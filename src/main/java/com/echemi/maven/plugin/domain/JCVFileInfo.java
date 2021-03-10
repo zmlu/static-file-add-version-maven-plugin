@@ -1,18 +1,18 @@
-package com.jacob.maven.plugin.domain;
+package com.echemi.maven.plugin.domain;
 
 import java.io.File;
 
 /**  
 * @Package 文件信息
-*	 com.iqarr.maven.plugin.domain
+*	 com.echemi.maven.plugin.domain
 * @ClassName: 
 *	 JCVFileInfo  
 * @since 
 *	  V1.0
 * @author 
-*		zhangyong   
+*		jacob   
 * @date 
-*		2017/01/06-16:24:02
+*		2021/03/06-16:24:02
 * @version 
 *		V1.0      
 */

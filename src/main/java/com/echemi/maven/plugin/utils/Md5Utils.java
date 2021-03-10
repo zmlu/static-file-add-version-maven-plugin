@@ -1,4 +1,4 @@
-package com.jacob.maven.plugin.utils;
+package com.echemi.maven.plugin.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,15 +8,15 @@ import java.security.MessageDigest;
 
 /**  
 * @Package 
-*	 com.iqarr.maven.plugin.utils
+*	 com.echemi.maven.plugin.utils
 * @ClassName: 
 *	 Md5Utils  
 * @since 
 *	  V1.0
 * @author 
-*		zhangyong   
+*		jacob   
 * @date 
-*		2017/01/06-16:18:22
+*		2021/03/06-16:18:22
 * @version 
 *		V1.0      
 */

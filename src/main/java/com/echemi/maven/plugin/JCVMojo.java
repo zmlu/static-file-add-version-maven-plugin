@@ -1,4 +1,4 @@
-package com.jacob.maven.plugin;
+package com.echemi.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,24 +16,24 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import com.jacob.maven.plugin.domain.JCVFileInfo;
-import com.jacob.maven.plugin.domain.JCVMethodEnum;
-import com.jacob.maven.plugin.domain.PageInfo;
-import com.jacob.maven.plugin.domain.YUIConfig;
-import com.jacob.maven.plugin.utils.FileUtils;
-import com.jacob.maven.plugin.utils.Md5Utils;
+import com.echemi.maven.plugin.domain.JCVFileInfo;
+import com.echemi.maven.plugin.domain.JCVMethodEnum;
+import com.echemi.maven.plugin.domain.PageInfo;
+import com.echemi.maven.plugin.domain.YUIConfig;
+import com.echemi.maven.plugin.utils.FileUtils;
+import com.echemi.maven.plugin.utils.Md5Utils;
 
 /**  
 * @Package 
-*	 com.iqarr.maven.plugin
+*	 com.echemi.maven.plugin
 * @ClassName: 
 *	 JCMojo  
 * @since 
 *	  V1.0
 * @author 
-*		zhangyong   
+*		jacob   
 * @date 
-*		2017/01/06-10:34:34
+*		2021/03/06-10:34:34
 * @version 
 *		V1.0      
 */

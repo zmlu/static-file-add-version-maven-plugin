@@ -1,18 +1,18 @@
-package com.jacob.maven.plugin.domain;
+package com.echemi.maven.plugin.domain;
 
 import java.io.File;
 
 /**  
 * @Package 
-*	 com.iqarr.maven.plugin.domain
+*	 com.echemi.maven.plugin.domain
 * @ClassName: 
 *	 PageInfo  
 * @since 
 *	  V1.0
 * @author 
-*		zhangyong   
+*		jacob   
 * @date 
-*		2017/01/07-10:01:07
+*		2021/03/07-10:01:07
 * @version 
 *		V1.0      
 */

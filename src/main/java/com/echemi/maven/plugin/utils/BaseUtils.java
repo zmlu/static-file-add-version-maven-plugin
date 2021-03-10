@@ -1,18 +1,18 @@
-package com.jacob.maven.plugin.utils;
+package com.echemi.maven.plugin.utils;
 
 import java.util.List;
 
 /**
  * @Package
- *          com.iqarr.maven.plugin.utils
+ *          com.echemi.maven.plugin.utils
  * @ClassName:
  *             BaseUtils
  * @since
  *        V1.0
  * @author
- *         zhangyong
+ *         jacob
  * @date
- *       2017/01/17-14:42:11
+ *       2021/03/17-14:42:11
  * @version
  *          V1.0
  */

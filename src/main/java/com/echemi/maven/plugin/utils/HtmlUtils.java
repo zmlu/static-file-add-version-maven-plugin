@@ -1,24 +1,24 @@
-package com.jacob.maven.plugin.utils;
+package com.echemi.maven.plugin.utils;
 
-import static com.jacob.maven.plugin.utils.BaseUtils.checkNextStrIndex;
-import static com.jacob.maven.plugin.utils.BaseUtils.comparisonCharArray;
-import static com.jacob.maven.plugin.utils.BaseUtils.comparisonUpCharArray;
+import static com.echemi.maven.plugin.utils.BaseUtils.checkNextStrIndex;
+import static com.echemi.maven.plugin.utils.BaseUtils.comparisonCharArray;
+import static com.echemi.maven.plugin.utils.BaseUtils.comparisonUpCharArray;
 
 import java.io.IOException;
 
-import com.jacob.maven.plugin.domain.DocPosition;
+import com.echemi.maven.plugin.domain.DocPosition;
 
 /**  
 * @Package 
-*	 com.iqarr.maven.plugin.utils
+*	 com.echemi.maven.plugin.utils
 * @ClassName: 
 *	 HtmlUtils  
 * @since 
 *	  V1.0
 * @author 
-*		zhangyong   
+*		jacob   
 * @date 
-*		2017/01/07-11:15:21
+*		2021/03/07-11:15:21
 * @version 
 *		V1.0      
 */
