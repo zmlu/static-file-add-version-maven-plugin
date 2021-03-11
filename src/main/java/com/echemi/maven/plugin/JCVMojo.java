@@ -2,11 +2,7 @@ package com.echemi.maven.plugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -22,6 +18,7 @@ import com.echemi.maven.plugin.domain.PageInfo;
 import com.echemi.maven.plugin.domain.YUIConfig;
 import com.echemi.maven.plugin.utils.FileUtils;
 import com.echemi.maven.plugin.utils.Md5Utils;
+import org.codehaus.plexus.util.StringUtils;
 
 /**  
 * @Package 
@@ -91,6 +88,13 @@ public class JCVMojo extends AbstractMojo {
     private String globaCsslPrefixPath="";
 
     /**
+     * 全局Image文件前缀
+     * 不配置该属性，就从根目录全部扫描
+     */
+    @Parameter(defaultValue ="")
+    private String globaImagelPrefixPath="";
+
+    /**
      * 全局JS文件EL前缀
      */
     @Parameter(defaultValue ="")
@@ -101,6 +105,12 @@ public class JCVMojo extends AbstractMojo {
      */
     @Parameter(defaultValue ="")
     private String cdnCssElName ="";
+    
+    /**
+     * 全局Image文件EL前缀
+     */
+    @Parameter(defaultValue ="")
+    private String cdnImageElName ="";
 
     /**
      * 全局EL前缀替换成的本地静态资源目录
@@ -119,7 +129,12 @@ public class JCVMojo extends AbstractMojo {
      */
     @Parameter(defaultValue ="MD5_METHOD")
     private JCVMethodEnum globaCssMethod;
-    
+
+    /**
+     * image 使用方法
+     */
+    @Parameter(defaultValue ="MD5_METHOD")
+    private JCVMethodEnum globaImageMethod;
     
     /**根目录名称 **/
     @Parameter(defaultValue ="${project.build.finalName}")
@@ -137,7 +152,7 @@ public class JCVMojo extends AbstractMojo {
     
     /** 使用md5文件名输出js css 指定目录**/
     @Parameter(defaultValue ="")
-    private String outJSCSSDirPath;
+    private String outJsCssImageDirPath;
     
     //version 0.0.2
     
@@ -160,6 +175,10 @@ public class JCVMojo extends AbstractMojo {
     /** 排除css文件(只支持全路径匹配)**/
     @Parameter
     private List<String> excludesCss;
+    
+    /** 排除image文件(只支持全路径匹配)**/
+    @Parameter
+    private List<String> excludesImage;
     
     /** yui config**/
     @Parameter
@@ -201,12 +220,13 @@ public class JCVMojo extends AbstractMojo {
         Map<String,JCVFileInfo> collected= new HashMap<String,JCVFileInfo>();
         getAllCssFile(collected,webRoot);
         getAllJsFile(collected,webRoot);
-        
+        getAllImageFile(collected,webRoot);
+
         JCVFactory jcf=new JCVFactory(
-                        collected, globaJsMethod,globaCssMethod, versionLable, baseJsDomin,
-                        baseCssDomin, globaJslPrefixPath, globaCsslPrefixPath, cdnCssElName, cdnJsElName, elNameIncludePath, sourceEncoding, clearPageComment,  getLog(),outJSCSSDirPath,
+                        collected, globaJsMethod,globaCssMethod,globaImageMethod, versionLable, baseJsDomin,
+                        baseCssDomin, globaJslPrefixPath, globaCsslPrefixPath,globaImagelPrefixPath, cdnCssElName, cdnJsElName,cdnImageElName, elNameIncludePath, sourceEncoding, clearPageComment,  getLog(), outJsCssImageDirPath,
                         compressionCss, compressionJs,userCompressionSuffix,
-                        excludesJs,excludesCss,
+                        excludesJs,excludesCss,excludesImage,
                         yuiConfig,braekFileNameSuffix);
         List<PageInfo> pages=new ArrayList<PageInfo>();
         getAllProcessFile(pages,webRoot,suffixs);
@@ -234,22 +254,25 @@ public class JCVMojo extends AbstractMojo {
 
 
         //复制MD5FileName_METHOD　文件
-        if (globaCssMethod == JCVMethodEnum.MD5FileName_METHOD || globaJsMethod == JCVMethodEnum.MD5FileName_METHOD) {
+        if (globaCssMethod == JCVMethodEnum.MD5FileName_METHOD || globaJsMethod == JCVMethodEnum.MD5FileName_METHOD || globaImageMethod == JCVMethodEnum.MD5FileName_METHOD) {
             List<JCVFileInfo> processFiles = jcf.getProcessFiles();
             for (JCVFileInfo info : processFiles) {
                 if(globaCssMethod == JCVMethodEnum.MD5FileName_METHOD && JCVFileInfo.CSS.equals(info.getFileType())){
-                    copyMd5FileNameJssCss(info);
+                    copyMd5FileNameJsCssImage(info);
                 }
                 if(globaJsMethod == JCVMethodEnum.MD5FileName_METHOD && JCVFileInfo.JS.equals(info.getFileType())){
-                    copyMd5FileNameJssCss(info);
+                    copyMd5FileNameJsCssImage(info);
+                }
+                if(globaImageMethod == JCVMethodEnum.MD5FileName_METHOD && JCVFileInfo.IMAGE.contains(info.getFileType())){
+                    copyMd5FileNameJsCssImage(info);
                 }
             }
         }
         
       //压缩，处理js css
         if (compressionJs == true || compressionCss == true) {
-            String tempPath = outJSCSSDirPath;
-            if (null != outJSCSSDirPath && !"".equals(outJSCSSDirPath)) {
+            String tempPath = outJsCssImageDirPath;
+            if (null != outJsCssImageDirPath && !"".equals(outJsCssImageDirPath)) {
                 
             } else {
                 tempPath = outputDirectory.getPath() + FileUtils.getSystemFileSeparator() + webRootName;
@@ -287,7 +310,7 @@ public class JCVMojo extends AbstractMojo {
                 
             }
             for (JCVFileInfo info : copyFiles) {
-                copyFileJssCss(info);
+                copyFileJsCss(info);
             }
         }
         
@@ -295,21 +318,18 @@ public class JCVMojo extends AbstractMojo {
         getLog().info("=============================================");
     }
     
-    public void copyMd5FileNameJssCss(JCVFileInfo jcf){
+    public void copyMd5FileNameJsCssImage(JCVFileInfo jcf){
         
         String tempPath="";
-        if(null!=outJSCSSDirPath &&!"".equals(outJSCSSDirPath) ){
-           
-            
-        }else {
-            outJSCSSDirPath=outputDirectory.getPath()+FileUtils.getSystemFileSeparator()+webRootName;
+        if (StringUtils.isEmpty(outJsCssImageDirPath)) {
+            outJsCssImageDirPath =outputDirectory.getPath()+FileUtils.getSystemFileSeparator()+webRootName;
         }
-        
-        
+
+
         if(tempPath.endsWith(FileUtils.getSystemFileSeparator())){
-            tempPath+=outJSCSSDirPath+jcf.getRelativelyFilePath();
+            tempPath+= outJsCssImageDirPath +jcf.getRelativelyFilePath();
         }else {
-            tempPath+=outJSCSSDirPath+FileUtils.getSystemFileSeparator()+jcf.getRelativelyFilePath();
+            tempPath+= outJsCssImageDirPath +FileUtils.getSystemFileSeparator()+jcf.getRelativelyFilePath();
         }
         int lastIndexOf = tempPath.lastIndexOf(FileUtils.getSystemFileSeparator());
         tempPath = tempPath.substring(0, lastIndexOf);
@@ -337,21 +357,21 @@ public class JCVMojo extends AbstractMojo {
      * 复制未处理文件
      * @param jcf
      */
-    public void copyFileJssCss(JCVFileInfo jcf){
+    public void copyFileJsCss(JCVFileInfo jcf){
         
         String tempPath="";
-        if(null!=outJSCSSDirPath &&!"".equals(outJSCSSDirPath) ){
+        if(null!= outJsCssImageDirPath &&!"".equals(outJsCssImageDirPath) ){
            
             
         }else {
-            outJSCSSDirPath=outputDirectory.getPath()+FileUtils.getSystemFileSeparator()+webRootName;
+            outJsCssImageDirPath =outputDirectory.getPath()+FileUtils.getSystemFileSeparator()+webRootName;
         }
         
         
         if(tempPath.endsWith(FileUtils.getSystemFileSeparator())){
-            tempPath+=outJSCSSDirPath+jcf.getRelativelyFilePath();
+            tempPath+= outJsCssImageDirPath +jcf.getRelativelyFilePath();
         }else {
-            tempPath+=outJSCSSDirPath+FileUtils.getSystemFileSeparator()+jcf.getRelativelyFilePath();
+            tempPath+= outJsCssImageDirPath +FileUtils.getSystemFileSeparator()+jcf.getRelativelyFilePath();
         }
         int lastIndexOf = tempPath.lastIndexOf(FileUtils.getSystemFileSeparator());
         tempPath = tempPath.substring(0, lastIndexOf);
@@ -457,6 +477,53 @@ public class JCVMojo extends AbstractMojo {
             jcv.setFile(f);
             collected.put(path, jcv);
             jcv=null;
+        }
+    }
+
+
+    /**
+     *
+     * 获取全部Image文件
+     * @param collected
+     */
+    public void getAllImageFile(Map<String,JCVFileInfo> collected,final String rootPath){
+        if(collected==null){
+            collected=new HashMap<String,JCVFileInfo>();
+        }
+        String webRoot=rootPath;
+        List<String > su=new ArrayList<String>();
+        su = Arrays.asList(JCVFileInfo.IMAGE.split(","));
+        if (globaImagelPrefixPath != null && !"".equals(globaImagelPrefixPath)) {
+            if (webRoot.endsWith(FileUtils.getSystemFileSeparator())) {
+                webRoot+=globaImagelPrefixPath;
+            }else {
+                webRoot+=FileUtils.getSystemFileSeparator()+globaImagelPrefixPath;
+            }
+        }
+        if (!webRoot.endsWith(FileUtils.getSystemFileSeparator())) {
+            webRoot+=FileUtils.getSystemFileSeparator();
+        }
+        List<File> listFile=new ArrayList<File>();
+        FileUtils.collectFiles(listFile, new File(webRoot), su);
+        for(File f:listFile){
+            String path = f.getPath();
+            path= path.replaceFirst(webRoot, "");
+            
+            JCVFileInfo jcv=new JCVFileInfo();
+            if(!FileUtils.getSystemFileSeparatorIslinux()){
+                path= path.replaceAll("\\", "/");
+            }
+            if (f.getName().contains(".")){
+                String[] split = f.getName().split("\\.");
+                jcv.setFileType(split[split.length-1]);
+            }else {
+                continue;
+            }
+            jcv.setFileVersion(getFileVersion(f,globaImageMethod));
+            jcv.setRelativelyFilePath(path);
+            jcv.setFileName(f.getName());
+            jcv.setFile(f);
+            collected.put(path, jcv);
         }
     }
     

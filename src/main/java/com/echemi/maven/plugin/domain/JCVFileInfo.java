@@ -24,6 +24,8 @@ public class JCVFileInfo {
     public static final String CSS="css"; //css
     /** js**/
     public static final String JS="js";
+    /** image**/
+    public static final String IMAGE="jpg,png,svg,gif";
     
     /**相对文件路径  去除了文件webroot 和全部前缀路径 **/
     private String relativelyFilePath;

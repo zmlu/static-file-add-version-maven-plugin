@@ -36,6 +36,8 @@ public class JCVFactory {
 
 	private JCVMethodEnum cssEn;
 
+	private JCVMethodEnum imageEn;
+
 	private String versionLable;
 
 	private List<String> baseJsDomin;
@@ -45,9 +47,12 @@ public class JCVFactory {
 	private String globaJslPrefixPath;
 
 	private String globaCsslPrefixPath;
+	
+	private String globaImagelPrefixPath;
 
 	private String globaJsElPrefix;
 	private String globaCssElPrefix;
+	private String globaImageElPrefix;
 	private String globaElEqualStaticPath;
 
 	private String sourceEncoding;
@@ -86,6 +91,11 @@ public class JCVFactory {
 	 * 排除css文件(只支持全路径匹配，如果是文件夹那么该文件夹下全部将会忽略)
 	 **/
 	private List<String> excludesCss;
+	
+	/**
+	 * 排除image文件(只支持全路径匹配，如果是文件夹那么该文件夹下全部将会忽略)
+	 **/
+	private List<String> excludesImage;
 
 
 	/**
@@ -104,28 +114,31 @@ public class JCVFactory {
 	}
 
 	public JCVFactory(Map<String, JCVFileInfo> jcvs,
-					  JCVMethodEnum jsEn, JCVMethodEnum cssEn,
+					  JCVMethodEnum jsEn, JCVMethodEnum cssEn, JCVMethodEnum imageEn,
 					  String versionLable     //
 			, List<String> baseJsDomin, List<String> baseCssDomin   //
-			, String globaJslPrefixPath, String globaCsslPrefixPath   //
-			, String globaCssElPrefix, String globaJsElPrefix, String globaElEqualStaticPath
+			, String globaJslPrefixPath, String globaCsslPrefixPath, String globaImagelPrefixPath   //
+			, String globaCssElPrefix, String globaJsElPrefix,String globaImageElPrefix, String globaElEqualStaticPath
 			, String sourceEncoding  //
 			, boolean clearPageComment  //
 			, Log log
 			, String outJSCSSDirPath
 			, boolean compressionCss, boolean compressionJs, String userCompressionSuffix
-			, List<String> excludesJs, List<String> excludesCss
+			, List<String> excludesJs, List<String> excludesCss, List<String> excludesImage
 			, YUIConfig yuiConfig, String braekFileNameSuffix) {
 
 		this.jcvs = jcvs;
 		this.jsEn = jsEn;
 		this.cssEn = cssEn;
+		this.imageEn = imageEn;
 		this.versionLable = versionLable;
 		this.baseJsDomin = baseJsDomin;
 		this.baseCssDomin = baseCssDomin;
 		this.globaJslPrefixPath = globaJslPrefixPath;
 		this.globaCsslPrefixPath = globaCsslPrefixPath;
+		this.globaImagelPrefixPath = globaImagelPrefixPath;
 		this.globaCssElPrefix = globaCssElPrefix;
+		this.globaImageElPrefix = globaImageElPrefix;
 		this.globaJsElPrefix = globaJsElPrefix;
 		this.globaElEqualStaticPath = globaElEqualStaticPath;
 		this.sourceEncoding = sourceEncoding;
@@ -138,6 +151,7 @@ public class JCVFactory {
 
 		this.excludesJs = excludesJs;
 		this.excludesCss = excludesCss;
+		this.excludesImage = excludesImage;
 		if (yuiConfig == null) {
 			yuiConfig = new YUIConfig();
 		}
@@ -160,11 +174,11 @@ public class JCVFactory {
 					continue;
 				}
 				StringBuffer sb = new StringBuffer(strAll);
-				int ret = processCSS(sb, 0);
-				int ret2 = processJS(sb, 0);
-				int ret3 = 0;
+				processCSS(sb, 0);
+				processJS(sb, 0);
+				processImage(sb, 0);
 				if (clearPageComment) {
-					ret3 = processPageComment(sb, 0);
+					processPageComment(sb, 0);
 					FileUtils.clearBlankLines(sb, sourceEncoding);
 				}
 				savehtml.add(sb.toString());
@@ -480,6 +494,74 @@ public class JCVFactory {
 
 
 	/**
+	 * @param sb
+	 * @param index
+	 * @return -1 表示跳过., 1 表示 获取下一行在传入 , 0 处理结束
+	 */
+	public int processImage(StringBuffer sb, int index) {
+		DocPosition dp = new DocPosition();
+		if (index == 0 || index == -1) {
+			dp.setIndexPos(index);
+		} else {
+			dp.setIndexPos(index);
+		}
+		dp.setStartLab("<img");
+		dp.setEndLad("src=");
+		dp.setCheckEndLad(">");
+		getHtmllabDocposition(sb, dp);
+
+		if (dp.getEndPos() == -1 || !dp.isFindIt()) {
+			if (index < sb.length() && dp.getStartPos() != -1) {
+				return processImage(sb, index + dp.getStartPos() + "<script".length());
+			} else {
+				return -1;
+			}
+		}
+		char[] cas = sb.toString().toCharArray();
+		// int size=cas.length;
+        /*if(dp.getEndPos()==-1 || dp.getEndPos()>size){
+            if(null!=log){
+                log.info("index:"+index +" setStartLab:"+dp.getStartPos()+" endPost:"+dp.getEndPos());
+            }
+            return 1;
+        }*/
+
+		char endChar = cas[dp.getEndPos()];
+
+		if (endChar != '\'' && endChar != '"') {
+			return -1;
+		}
+		DocPosition dpsrc = new DocPosition();
+		dpsrc.setIndexPos(dp.getEndPos() - 1);
+		dpsrc.setStartLab(endChar + "");
+		dpsrc.setEndLad(endChar + "");
+		dpsrc.setCheckEndLad(">");
+		getHtmllabDocposition(sb, dpsrc);
+		if (!dpsrc.isFindIt()) {
+			return -1;
+		}
+		int length = dpsrc.getEndPos() - dpsrc.getStartPos() - 2;
+		if (length < 0) {
+			return -1;
+		}
+		char[] links = new char[length];
+		System.arraycopy(cas, dpsrc.getStartPos() + 1, links, 0, length);
+		String link = new String(links);
+
+		if (log != null) {
+			log.debug("find image link:" + link);
+		}
+
+		processImagelink(sb, dpsrc.getStartPos() - 1, dpsrc.getEndPos() - 1, link);
+
+
+		int res = processImage(sb, dpsrc.getEndPos());
+
+		return res;
+
+	}
+	
+	/**
 	 * 注释处理
 	 *
 	 * @param sb
@@ -637,6 +719,63 @@ public class JCVFactory {
 		return 0;
 	}
 
+	public int processImagelink(StringBuffer sb, final int start, final int end, final String historylink) {
+		if (historylink.startsWith("http://") || historylink.startsWith("https://")) {
+			//绝对
+			for (String domain : baseJsDomin) {
+				String fullLink = domain;
+				if (null != globaImagelPrefixPath && !"".equals(globaImagelPrefixPath)) {
+					if (!fullLink.endsWith(HTML_URL_SEPARATOR)) {
+						fullLink += HTML_URL_SEPARATOR;
+					}
+					if (globaImagelPrefixPath.startsWith(HTML_URL_SEPARATOR)) {
+						fullLink += globaImagelPrefixPath.replaceFirst(HTML_URL_SEPARATOR, "");
+					} else {
+						fullLink += globaImagelPrefixPath;
+					}
+
+				}
+				String tempUrl = historylink.replaceFirst(fullLink, "");
+				if (tempUrl != null && tempUrl.startsWith(HTML_URL_SEPARATOR)) {
+					tempUrl = tempUrl.replaceFirst(HTML_URL_SEPARATOR, "");
+				}
+				tempUrl = removeUrlPar(tempUrl);
+				JCVFileInfo jcvFileInfo = jcvs.get(tempUrl);
+				if (jcvFileInfo != null) {
+
+					instatVersion(sb, start, end, historylink, fullLink, jcvFileInfo);
+					break;
+				}
+			}
+
+		} else {
+			//相对　
+			// String fullLink="";
+			StringBuilder fullLink = new StringBuilder();
+			if (globaImagelPrefixPath.startsWith(HTML_URL_SEPARATOR)) {
+				fullLink.append(globaImagelPrefixPath.replaceFirst(HTML_URL_SEPARATOR, ""));
+			} else {
+				fullLink.append(globaImagelPrefixPath);
+			}
+			fullLink.append(historylink);
+			String s = removeUrlPar(fullLink.toString());
+			fullLink = new StringBuilder(s);
+			if (fullLink.indexOf(HTML_URL_SEPARATOR, 0) == 0) {
+				fullLink.delete(0, 1);
+			}
+			if (StringUtils.isNotEmpty(globaElEqualStaticPath) && StringUtils.isNotEmpty(globaImageElPrefix)) {
+				fullLink = new StringBuilder(fullLink.toString().replace(globaImageElPrefix.substring(1), globaElEqualStaticPath));
+			}
+			JCVFileInfo jcvFileInfo = jcvs.get(fullLink.toString());
+			if (jcvFileInfo != null) {
+				instatVersion(sb, start, end, historylink, fullLink.toString(), jcvFileInfo);
+			}
+		}
+
+
+		return 0;
+	}
+
 	/**
 	 * 插入版本号
 	 *
@@ -739,6 +878,23 @@ public class JCVFactory {
 							if (null != log) {
 								log.warn(" not support method method:" + cssEn.name());
 							}
+						}
+					}
+				} else {
+					if (null != log) {
+						log.debug(" break file :" + jcvFileInfo.getFileType());
+					}
+				}
+			}else if (JCVFileInfo.IMAGE.contains(jcvFileInfo.getFileType())) {
+				if (!checkStrIsInList(jcvFileInfo.getRelativelyFilePath(), excludesImage, true)) {
+					if (imageEn == JCVMethodEnum.MD5_METHOD || imageEn == JCVMethodEnum.TIMESTAMP_METHOD) {
+						versionStr = getVersionStr(jcvFileInfo, false, false, userCompressionSuffix, historylink);
+					} else if (imageEn == JCVMethodEnum.MD5FileName_METHOD) {
+						versionStr = getVersionStr(jcvFileInfo, true, false, userCompressionSuffix, historylink);
+						isReplace = true;
+					} else {
+						if (null != log) {
+							log.warn(" not support method method:" + cssEn.name());
 						}
 					}
 				} else {
