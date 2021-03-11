@@ -47,9 +47,9 @@
 <!--静态资源添加版本号 结束-->
 ```
 
-### 打包
+### 打包发布
 
 ```
-mvn clean package
+mvn clean deploy -P release
 ```
-注意该插件不会在eclipse中生效，在package后才会生效
+注意该插件不会在idea中生效，在package后才会生效

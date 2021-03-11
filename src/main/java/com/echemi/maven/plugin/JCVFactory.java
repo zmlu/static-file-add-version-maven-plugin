@@ -169,7 +169,7 @@ public class JCVFactory {
 				}
 				savehtml.add(sb.toString());
 				if (null != log) {
-					log.info(" page:" + pageInfo.getFile().getName() + " Processing is complete");
+					log.debug(" page:" + pageInfo.getFile().getName() + " Processing is complete");
 				}
 				FileUtils.writeFile(pageInfo.getOutFile(), sourceEncoding, savehtml);
 
