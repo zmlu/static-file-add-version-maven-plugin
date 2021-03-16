@@ -1,400 +1,278 @@
 package com.echemi.maven.plugin.utils;
 
-import static com.echemi.maven.plugin.utils.BaseUtils.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import com.echemi.maven.plugin.constant.Constants;
+
+import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.List;
 
+import static com.echemi.maven.plugin.utils.BaseUtils.checkNextCharIndex;
+
 /**
- * @Package 文件工具
- *          com.echemi.maven.plugin.utils
- * @ClassName:
- *             FileUtils
- * @since
- *        V1.0
- * @author
- *         jacob
- * @date
- *       2021/03/06-14:23:18
- * @version
- *          V1.0
+ * @author jacob
+ * created in  2021/3/11 16:13
+ * modified By:
  */
 public class FileUtils {
-    
-    /**
-     * 
-     * 遍历查找目标目录了中指定类型的文件，并保存在集合中
-     * 
-     * @param collected
-     *            指定类型文件集合
-     * @param file
-     *            目标目录
-     * @param includes
-     *            文件后缀,不包含点
-     */
-    public static void collectFiles(List<File> collected, File file, List<String> includes) {
-        if (file.isFile()) {
-            // 如果是文件，则判断是否为指定类型
-            
-            for (String include : includes) {
-                if (file.getName().endsWith("." + include)) {
-                    collected.add(file);
-                    break;
-                }
-            }
-        } else {
-            // 如果是目录，则遍历子文件或者子目录，递归查找
-            for (File sub : file.listFiles()) {
-                collectFiles(collected, sub, includes);
-            }
-        }
-    }
-    
-    /**
-     * 
-     * 读取file文件，将文件中的数据按照行读取到String数组中
-     * 
-     * 
-     * @param file
-     * @param sourceEncoding
-     * @return
-     * @throws IOException
-     */
-    public static String[] readToString(final File file, final String sourceEncoding) throws IOException {
-        
-        Long filelength = file.length();
-        byte[] filecontent = new byte[filelength.intValue()];
-        InputStream in = null;
-        String[] fileContentArr = null;
-        try {
-            in = new FileInputStream(file);
-            in.read(filecontent);
-            String string = new String(filecontent, Charset.forName(sourceEncoding));
-            char[] lfc = testFileLinefeed(string, sourceEncoding);
-            String lf = "";
-            if (lfc==null ||lfc.length == 0) {
-                fileContentArr = new String[1];
-                fileContentArr[0] = string;
-                return fileContentArr;
-            } else
-                if (lfc.length == 1) {
-                    lf += lfc[0];
-                } else {
-                    lf += lfc[0];
-                    lf += lfc[1];
-                }
-            
-            fileContentArr = string.split(lf);
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-        }
-        
-        return fileContentArr;
-    }
-    
-    /**
-     * 
-     * 读取文件
-     * 
-     * @param file
-     * @param sourceEncoding
-     * @return
-     * @throws Exception
-     */
-    public static String readToStr(final File file, final String sourceEncoding) throws Exception {
-        Long filelength = file.length();
-        byte[] filecontent = new byte[filelength.intValue()];
-        InputStream in = null;
-        String string = "";
-        try {
-            in = new FileInputStream(file);
-            in.read(filecontent);
-            string = new String(filecontent, Charset.forName(sourceEncoding));
-            
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-        }
-        return string;
-    }
-    
-    /**
-     * 
-     * 写文件
-     * 
-     * @param file
-     * @param sourceEncoding
-     *            文件编码
-     * @param strs
-     * @throws IOException
-     */
-    public static void writeFile(final File file, final String sourceEncoding, final List<String> strs) throws IOException {
-        
-        OutputStream out = null;
-        
-        try {
-            out = new FileOutputStream(file, false);
-            for (String s : strs) {
-                if (strs != null && !"".equals(s) && s.length() > 0) {   // && !"\r\n".equals(s)
-                    out.write(s.getBytes(Charset.forName(sourceEncoding)));
-                    out.write(getSystemLineSpearator().getBytes(Charset.forName(sourceEncoding)));
-                }
-            }
-            
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            if (out != null) {
-                out.flush();
-                out.close();
-            }
-            
-        }
-        
-    }
-    
-    /**
-     * 
-     * @Title:
-     *         getSystemFileSeparator
-     * @Description:
-     *               获取系统文件分割符
-     * @return
-     */
-    public static String getSystemFileSeparator() {
-        
-        return System.getProperties().getProperty("file.separator");
-    }
-    
-    /**
-     * 
-     * 获取路径是否linux
-     * 
-     * @return
-     */
-    public static boolean getSystemFileSeparatorIslinux() {
-        String property = System.getProperties().getProperty("file.separator");
-        if ("/".equals(property)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * 
-     * 文件复制
-     * 
-     * @param source
-     * @param to
-     * @throws IOException
-     */
-    public static void fileChannelCopy(final File source, final File to) throws IOException {
-        FileInputStream fi = null;
-        FileOutputStream fo = null;
-        FileChannel in = null;
-        FileChannel out = null;
-        try {
-            fi = new FileInputStream(source);
-            fo = new FileOutputStream(to);
-            in = fi.getChannel();
-            out = fo.getChannel();
-            in.transferTo(0, in.size(), out);
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            try {
-                fi.close();
-                in.close();
-                fo.close();
-                out.close();
-            } catch (IOException e) {
-                throw e;
-            }
-        }
-    }
-    
-    /**
-     * 
-     * 测试文件的换行符号
-     * 
-     * @param source
-     * @return
-     * @throws IOException
-     */
-    public static char[] testFileLinefeed(final File file, final String sourceEncoding) throws IOException {
-       
-        if (file == null) {
-            throw new IOException();
-        }
-        
-        Long filelength = file.length();
-        byte[] filecontent = new byte[filelength.intValue()];
-        InputStream in = null;
-        try {
-            in = new FileInputStream(file);
-            in.read(filecontent);
-            String str = new String(filecontent, Charset.forName(sourceEncoding));
-           return testFileLinefeed(str, sourceEncoding);
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-        }
-        
-       
-    }
-    /**
-     * 
-     * 测试文件换行符号
-     * @param str
-     * @param sourceEncoding
-     * @return
-     * @throws IOException
-     */
-    public static char[] testFileLinefeed(final String str, final String sourceEncoding) throws IOException {
-        char[] ret = null;
-       if(null==str || str.length()==0){
-           return null;
-       }
-        try {
-            char[] charArray = str.toCharArray();
-            int charslenth = charArray.length;
-            char lf = '\r';
-            int index = 0;
-           
-            
-            /*
-             * /r Mac
-             * /r/n Windows
-             * /n Unix/Linux
-             */
-            
-           index = checkNextCharIndex(charArray, index, '\n');
-            if (index != -1) {
-                if ((index - 1) >= 0 && charArray[index - 1] == '\r') {
-                    // windows
-                    ret = new char[2];
-                    ret[0] = '\r';
-                    ret[1] = '\n';
-                    return ret;
-                } else {
-                    
-                    // linux
-                    ret = new char[1];
-                    ret[0] = '\n';
-                    return ret;
-                }
-            }else {
-                index=0;
-                index = checkNextCharIndex(charArray, index, lf);
-                if (index != -1) {
-                    if (charslenth > (index+1)) {
+	private FileUtils() {
+	}
 
-                        if (charArray[index + 1] == '\n') {
-                            //windows
-                            ret = new char[2];
-                            ret[0] = '\r';
-                            ret[1] = '\n';
-                            return ret;
-                        } else {
-                            // mac
-                            ret = new char[1];
-                            ret[0] = '\r';
-                            return ret;
-                        }
-                        
-                    } else {
-                      //not find /r   return default linux
-                        ret = new char[1];
-                        ret[0] = '\n';
-                        return ret;
-                    }
-                }else {
-                    //not find /r   return default linux
-                    ret = new char[1];
-                    ret[0] = '\n';
-                    return ret;
-                }
-            }
-            
-            
-        } catch (Exception e) {
-            throw e;
-        }
-        
-    }
-    
-  
-    
-    /**
-     * 
-     * 系统换行符号
-     * 
-     * @return
-     */
-    public static String getSystemLineSpearator() {
-        return System.getProperty("line.separator");
-    }
-    
-    /**
-     * 
-     * 清除多余换行
-     * @param sb
-     * @throws IOException 
-     */
-    public static  void clearBlankLines(StringBuffer sb,final String sourceEncoding) throws IOException{
-        if(sb==null || sb.length()==0){
-            return ;
-        }
-        char[] chas = sb.toString().toCharArray();
-        int chasLenth=chas.length;
+	/**
+	 * 遍历查找目标目录了中指定类型的文件，并保存在集合中
+	 *
+	 * @param collected 指定类型文件集合
+	 * @param file      目标文件或文件夹
+	 * @param includes  文件后缀,不包含点
+	 */
+	public static void collectFiles(List<File> collected, File file, List<String> includes) {
+		if (file.isFile()) {
+			for (String suffix : includes) {
+				if (file.getName().endsWith(Constants.STR_DOT + suffix)) {
+					collected.add(file);
+					break;
+				}
+			}
+		} else {
+			File[] files = file.listFiles();
+			if (files != null) {
+				for (File sub : files) {
+					collectFiles(collected, sub, includes);
+				}
+			}
+		}
+	}
 
-        char[] testFileLinefeed = testFileLinefeed(sb.toString(),sourceEncoding);
-        int testLF=testFileLinefeed.length;
-     
-      
-        int delete_count=0;
-        int st=0;
-        int end=0;
-       for(int index=0;index<chasLenth; index+=testLF){
-             index = checkNextCharIndex(chas,index,testFileLinefeed);
-            if(index==-1 ){
-                return ;
-            }
-           int  index2 = checkNextCharIndex(chas,index+testLF,testFileLinefeed);
-           if(index2==-1 ){
-               return ;
-           }
-            if(index+testLF==index2){
-                st=index-delete_count;
-                end=index+testLF-delete_count;
-                sb.delete(st, end);
-                delete_count+=end-st;
-                
-            }else {
-                
-            }
-          
-            
-            
-        } 
-    }
-    
+	/**
+	 * 读取file文件，将文件中的数据按照行读取到String数组中
+	 *
+	 * @param file           需要读取的文件
+	 * @param sourceEncoding 文件编码格式
+	 * @return String[] 文件内容字符数组
+	 * @throws IOException 文件读取IO异常
+	 */
+	public static String[] readFileToString(final File file, final String sourceEncoding) throws IOException {
+		String[] result;
+		Long fileLength = file.length();
+		byte[] fileContent = new byte[fileLength.intValue()];
+		try (InputStream in = Files.newInputStream(file.toPath())) {
+			int count = in.read(fileContent);
+			if (count == 0) {
+				return new String[0];
+			}
+			String string = new String(fileContent, Charset.forName(sourceEncoding));
+			char[] lineFeedChar = getFileLineFeed(string);
+			StringBuilder lineFeed = new StringBuilder();
+			if (lineFeedChar.length == 0) {
+				result = new String[1];
+				result[0] = string;
+				return result;
+			} else {
+				lineFeed.append(lineFeedChar);
+			}
+			result = string.split(lineFeed.toString());
+		}
+		return result;
+	}
+
+	/**
+	 * 获取字符串的换行符
+	 *
+	 * @param str 字符串
+	 * @return char[] 回车换行
+	 * /r Mac
+	 * /r/n Windows
+	 * /n Unix/Linux
+	 */
+	public static char[] getFileLineFeed(final String str) {
+		if (null == str || str.length() == 0) {
+			return new char[0];
+		}
+		char[] charArray = str.toCharArray();
+		char[] windowsLineFeed = newWindowsLineFeed();
+		char[] macLineFeed = newMacLineFeed();
+		char[] linuxLineFeed = newLinuxLineFeed();
+		if (checkNextCharIndex(charArray, 0, windowsLineFeed) != -1) {
+			return windowsLineFeed;
+		} else if (checkNextCharIndex(charArray, 0, linuxLineFeed) != -1) {
+			return linuxLineFeed;
+		} else if (checkNextCharIndex(charArray, 0, macLineFeed) != -1) {
+			return macLineFeed;
+		} else {
+			return linuxLineFeed;
+		}
+
+	}
+
+	private static char[] newMacLineFeed() {
+		char[] ret = new char[1];
+		ret[0] = Constants.CHAR_ENTER_SIGN;
+		return ret;
+	}
+
+	private static char[] newWindowsLineFeed() {
+		char[] ret = new char[2];
+		ret[0] = Constants.CHAR_ENTER_SIGN;
+		ret[1] = Constants.CHAR_NEWLINE_SIGN;
+		return ret;
+	}
+
+	private static char[] newLinuxLineFeed() {
+		char[] ret = new char[1];
+		ret[0] = Constants.CHAR_NEWLINE_SIGN;
+		return ret;
+	}
+
+	/**
+	 * 读取文件
+	 *
+	 * @param file           文件
+	 * @param sourceEncoding 文件编码
+	 * @return 文件内容字符串
+	 * @throws IOException 文件读取IO异常
+	 */
+	public static String readFileToStr(final File file, final String sourceEncoding) throws IOException {
+		Long fileLength = file.length();
+		byte[] fileContent = new byte[fileLength.intValue()];
+		String string;
+		try (InputStream in = Files.newInputStream(file.toPath())) {
+			int count = in.read(fileContent);
+			if (count == 0) {
+				return null;
+			}
+			string = new String(fileContent, Charset.forName(sourceEncoding));
+		}
+		return string;
+	}
+
+	/**
+	 * 写文件
+	 *
+	 * @param file           要写的文件
+	 * @param sourceEncoding 文件编码
+	 * @param strList        要写的内容
+	 * @throws IOException 文件IO异常
+	 */
+	public static void writeFile(final File file, final String sourceEncoding, final List<String> strList) throws IOException {
+		try (OutputStream out = Files.newOutputStream(file.toPath())) {
+			for (String str : strList) {
+				if (StringUtils.isNotEmpty(str)) {
+					out.write(str.getBytes(Charset.forName(sourceEncoding)));
+					out.write(getSystemLineSeparator().getBytes(Charset.forName(sourceEncoding)));
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * 系统换行符号
+	 *
+	 * @return 系统换行符号
+	 */
+	public static String getSystemLineSeparator() {
+		return System.getProperty("line.separator");
+	}
+
+	/**
+	 * 文件复制
+	 *
+	 * @param source 源文件
+	 * @param to     目标文件
+	 * @throws IOException 文件IO异常
+	 */
+	public static void fileChannelCopy(final File source, final File to) throws IOException {
+		try (FileChannel in = new FileInputStream(source).getChannel();
+			 FileChannel out = new FileOutputStream(to).getChannel()) {
+			in.transferTo(0, in.size(), out);
+		}
+	}
+
+	/**
+	 * 获取文件换行符数组
+	 *
+	 * @param file           文件
+	 * @param sourceEncoding 文件编码
+	 * @return char[] 文件换行数组
+	 * @throws IOException 文件IO异常
+	 */
+	public static char[] getFileLineFeed(final File file, final String sourceEncoding) throws IOException {
+		if (file == null) {
+			throw new IOException();
+		}
+		Long fileLength = file.length();
+		byte[] fileContent = new byte[fileLength.intValue()];
+		try (InputStream in = Files.newInputStream(file.toPath())) {
+			int count = in.read(fileContent);
+			if (count == 0) {
+				return new char[0];
+			}
+			String str = new String(fileContent, Charset.forName(sourceEncoding));
+			return getFileLineFeed(str);
+		}
+
+	}
+
+	/**
+	 * 获取系统文件分割符
+	 *
+	 * @return 系统文件分割符
+	 */
+	public static String getSystemFileSeparator() {
+		return System.getProperty("file.separator");
+	}
+
+	/**
+	 * 清除多余换行
+	 *
+	 * @param stringBuilder 字符流
+	 */
+	public static void clearBlankLines(StringBuilder stringBuilder) {
+		if (stringBuilder == null || stringBuilder.length() == 0) {
+			return;
+		}
+		char[] chas = stringBuilder.toString().toCharArray();
+		int chasLength = chas.length;
+		char[] lineFeedChar = getFileLineFeed(stringBuilder.toString());
+		int lineFeedLength = lineFeedChar.length;
+		int doubleLineFeedLength = lineFeedLength * 2;
+		int deleteCount = 0;
+		int index = 0;
+		while (chasLength >= doubleLineFeedLength) {
+			index = checkNextCharIndex(chas, index, lineFeedChar);
+			if (index == -1) {
+				return;
+			}
+			int index2 = checkNextCharIndex(chas, index + lineFeedLength, lineFeedChar);
+			if (index2 == -1) {
+				return;
+			}
+			if (index + lineFeedLength == index2) {
+				int start = index - deleteCount;
+				stringBuilder.delete(start, start + lineFeedLength);
+				deleteCount += lineFeedLength;
+			}
+			index = index2;
+		}
+	}
+
+	/**
+	 * 获取文件的目录地址
+	 *
+	 * @param path 文件路径
+	 * @return 文件目录地址
+	 */
+	public static String getFilePathDirectory(String path) {
+		if (StringUtils.isEmpty(path)) {
+			return path;
+		}
+		int lastIndexOf = path.lastIndexOf(FileUtils.getSystemFileSeparator());
+		if (lastIndexOf > -1) {
+			path = path.substring(0, lastIndexOf);
+		}
+		return path;
+	}
+
 }
