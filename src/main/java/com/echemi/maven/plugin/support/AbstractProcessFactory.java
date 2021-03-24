@@ -92,8 +92,10 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 			char[] links = new char[length];
 			System.arraycopy(cas, docLabel.getStartSignPos() + 1, links, 0, length);
 			String link = new String(links);
-			logger.debug("find " + fileType + " link:" + link);
-			processLink(pageInfo, html, docLabel.getStartSignPos() - 1, docLabel.getSourceSignPos() - 1, link, fileType, processSuccessFiles);
+			if (!getUrlPar(link).contains(config.getVersionLabel() + "=")) {
+				logger.debug("find " + fileType + " link:" + link);
+				processLink(pageInfo, html, docLabel.getStartSignPos() - 1, docLabel.getSourceSignPos() - 1, link, fileType, processSuccessFiles);
+			}
 			return processVersion(pageInfo, html, docLabel.getEndSignPos(), processSuccessFiles, fileType, fileTypeSettings);
 		} else {
 			char startChar = cas[docLabel.getSourceSignPos()];
@@ -115,8 +117,10 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 			char[] links = new char[length];
 			System.arraycopy(cas, docLabel.getStartSignPos(), links, 0, length);
 			String link = new String(links);
-			logger.debug("find " + fileType + " link:" + link);
-			processLink(pageInfo, html, docLabel.getStartSignPos() - 1, docLabel.getSourceSignPos() - 1, link, fileType, processSuccessFiles);
+			if (!getUrlPar(link).contains(config.getVersionLabel() + "=")) {
+				logger.debug("find " + fileType + " link:" + link);
+				processLink(pageInfo, html, docLabel.getStartSignPos() - 1, docLabel.getSourceSignPos() - 1, link, fileType, processSuccessFiles);
+			}
 			return processVersion(pageInfo, html, docLabel.getSourceSignPos() - 1, processSuccessFiles, fileType, fileTypeSettings);
 		}
 	}
