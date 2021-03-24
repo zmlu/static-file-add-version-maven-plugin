@@ -12,20 +12,20 @@ public class PageInfo {
 	/**
 	 * 输出文件位置
 	 */
-	private File  outFile;
-
+	private File outFile;
+	
 	public File getFile() {
 		return file;
 	}
-
+	
 	public void setFile(File file) {
 		this.file = file;
 	}
-
+	
 	public File getOutFile() {
 		return outFile;
 	}
-
+	
 	public void setOutFile(File outFile) {
 		this.outFile = outFile;
 	}

@@ -1,5 +1,8 @@
 package com.echemi.maven.plugin.support;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.echemi.maven.plugin.constant.FileTypeEnum;
 import com.echemi.maven.plugin.constant.MethodEnum;
 import com.echemi.maven.plugin.entity.Config;
 import com.echemi.maven.plugin.entity.FileInfo;
@@ -9,7 +12,10 @@ import com.echemi.maven.plugin.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author jacob
@@ -20,18 +26,15 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 	public DefaultProcessFactory(Config config) {
 		super(config);
 	}
-
+	
 	@Override
 	public void init(final String webapp) {
+		this.webapp = webapp;
 		if (files == null) {
 			files = new HashMap<>(64);
 		}
 		
-		ArrayList<String> allSupportFileTypeList = new ArrayList<>();
-		allSupportFileTypeList.add(FileInfo.CSS);
-		allSupportFileTypeList.add(FileInfo.JS);
-		allSupportFileTypeList.addAll(Arrays.asList(FileInfo.IMAGE.split(",")));
-		getFileInfoByType(files, webapp, allSupportFileTypeList);
+		getFileInfo(files, webapp, Config.getSuffixList());
 		for (Map.Entry<String, FileInfo> file : files.entrySet()) {
 			logger.debug("find type:" + file.getValue().getFileType() + " file:" + file.getKey() + " md5:" + file.getValue().getFileVersion());
 		}
@@ -39,7 +42,7 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 			pages = new ArrayList<>();
 		}
 		getProcessPage(pages, webapp, config.getSuffix());
-
+		
 		String out = config.getOutDirRoot();
 		for (PageInfo pageInfo : pages) {
 			String path = pageInfo.getFile().getPath();
@@ -57,11 +60,11 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 				file.mkdirs();
 			}
 			pageInfo.setOutFile(new File(temp));
-
+			
 		}
-
+		
 	}
-
+	
 	@Override
 	public void execute() {
 		if (null == config) {
@@ -76,29 +79,31 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 					continue;
 				}
 				StringBuffer sb = new StringBuffer(strAll);
-				int cIndex = processVersion(sb, 0, processSuccessFiles, FileInfo.CSS);
-				int jIndex = processVersion(sb, 0, processSuccessFiles, FileInfo.JS);
-				int iIndex = processVersion(sb, 0, processSuccessFiles, FileInfo.IMAGE);
-				if (cIndex == 1 || jIndex == 1 || iIndex == 1) {
-					saveHtml.add(sb.toString());
-				} else {
-					saveHtml.add(sb.toString());
+				JSONObject selfConfig = Config.getSelfConfig();
+				JSONObject processFileType = selfConfig.getJSONObject("process_file_type");
+				for (String fileTypeStr : processFileType.keySet()) {
+					JSONObject fileTypeObj = processFileType.getJSONObject(fileTypeStr);
+					JSONArray settings = fileTypeObj.getJSONArray("settings");
+					for (int i = 0; i < settings.size(); i++) {
+						processVersion(pageInfo, sb, 0, processSuccessFiles, FileTypeEnum.valueOf(fileTypeStr), settings.getJSONObject(i));
+					}
 				}
+				saveHtml.add(sb.toString());
 				logger.debug("page:" + pageInfo.getFile().getName() + " Processing is complete");
 				FileUtils.writeFile(pageInfo.getOutFile(), config.getSourceEncoding(), saveHtml);
 			} catch (IOException e) {
 				logger.error(" the file process error :" + pageInfo.getFile().getPath(), e);
 			}
-
+			
 		}
 	}
-
+	
 	@Override
 	public void success() {
-
+	
 	}
-
-	private void getFileInfoByType(Map<String, FileInfo> collected, final String rootPath, final List<String> type) {
+	
+	private void getFileInfo(Map<String, FileInfo> collected, final String rootPath, final List<String> suffix) {
 		if (collected == null) {
 			collected = new HashMap<>(64);
 		}
@@ -107,7 +112,7 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 			root += FileUtils.getSystemFileSeparator();
 		}
 		List<File> fileList = new ArrayList<>();
-		FileUtils.collectFiles(fileList, new File(root), type);
+		FileUtils.collectFiles(fileList, new File(root), suffix);
 		for (File file : fileList) {
 			if (!file.getName().contains(".")) {
 				continue;
@@ -117,7 +122,7 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 			path = BaseUtils.replaceLinuxSystemLine(path);
 			
 			String[] split = file.getName().split("\\.");
-			String fileSuffix = split[split.length-1];
+			String fileSuffix = split[split.length - 1];
 			FileInfo fileInfo = new FileInfo();
 			fileInfo.setFileType(fileSuffix);
 			fileInfo.setFileVersion(getFileVersion(file, config.getMethod()));
@@ -133,9 +138,9 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 			collected.put(path, fileInfo);
 			file = null;
 		}
-
+		
 	}
-
+	
 	private void getProcessPage(List<PageInfo> files, String webapp, List<String> suffix) {
 		if (files == null) {
 			files = new ArrayList<>();

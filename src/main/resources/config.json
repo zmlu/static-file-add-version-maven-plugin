@@ -1,0 +1,75 @@
+{
+  "process_file_type": {
+    "JS": {
+      "suffixes": "js",
+      "settings": [
+        {
+          "start": "<script",
+          "src": "src=",
+          "end": ">",
+          "with_quote": true,
+          "comment": "标准js标签"
+        }
+      ]
+    },
+    "CSS": {
+      "suffixes": "css",
+      "settings": [
+        {
+          "start": "<link",
+          "src": "href=",
+          "end": ">",
+          "with_quote": true,
+          "comment": "标准css标签"
+        }
+      ]
+    },
+    "IMAGE": {
+      "suffixes": "jpg,png,svg,gif,jpeg,webp,avif",
+      "settings": [
+        {
+          "start": "<img",
+          "src": "src=",
+          "end": ">",
+          "with_quote": true,
+          "comment": "标准image标签"
+        },
+        {
+          "start": "<meta",
+          "src": "content=",
+          "end": ">",
+          "with_quote": true,
+          "comment": "标准image标签"
+        },
+        {
+          "start": "background:",
+          "src": "url(",
+          "end": ")",
+          "with_quote": false,
+          "comment": "样式background 不带引号"
+        },
+        {
+          "start": "background-image:",
+          "src": "url(",
+          "end": ")",
+          "with_quote": false,
+          "comment": "样式background-image 不带引号"
+        },
+        {
+          "start": "background:",
+          "src": "url(",
+          "end": ")",
+          "with_quote": true,
+          "comment": "样式background 带引号"
+        },
+        {
+          "start": "background-image:",
+          "src": "url(",
+          "end": ")",
+          "with_quote": true,
+          "comment": "样式background-image 带引号"
+        }
+      ]
+    }
+  }
+}

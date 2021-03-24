@@ -19,18 +19,18 @@ import static com.echemi.maven.plugin.utils.BaseUtils.checkNextCharIndex;
 public class FileUtils {
 	private FileUtils() {
 	}
-
+	
 	/**
 	 * 遍历查找目标目录了中指定类型的文件，并保存在集合中
 	 *
 	 * @param collected 指定类型文件集合
 	 * @param file      目标文件或文件夹
-	 * @param includes  文件后缀,不包含点
+	 * @param suffixes  文件后缀,不包含点
 	 */
-	public static void collectFiles(List<File> collected, File file, List<String> includes) {
+	public static void collectFiles(List<File> collected, File file, List<String> suffixes) {
 		if (file.isFile()) {
-			for (String suffix : includes) {
-				if (file.getName().endsWith(Constants.STR_DOT + suffix)) {
+			for (String suffix : suffixes) {
+				if (file.getName().toLowerCase().endsWith(Constants.STR_DOT + suffix.toLowerCase())) {
 					collected.add(file);
 					break;
 				}
@@ -39,12 +39,12 @@ public class FileUtils {
 			File[] files = file.listFiles();
 			if (files != null) {
 				for (File sub : files) {
-					collectFiles(collected, sub, includes);
+					collectFiles(collected, sub, suffixes);
 				}
 			}
 		}
 	}
-
+	
 	/**
 	 * 读取file文件，将文件中的数据按照行读取到String数组中
 	 *
@@ -76,7 +76,7 @@ public class FileUtils {
 		}
 		return result;
 	}
-
+	
 	/**
 	 * 获取字符串的换行符
 	 *
@@ -103,28 +103,28 @@ public class FileUtils {
 		} else {
 			return linuxLineFeed;
 		}
-
+		
 	}
-
+	
 	private static char[] newMacLineFeed() {
 		char[] ret = new char[1];
 		ret[0] = Constants.CHAR_ENTER_SIGN;
 		return ret;
 	}
-
+	
 	private static char[] newWindowsLineFeed() {
 		char[] ret = new char[2];
 		ret[0] = Constants.CHAR_ENTER_SIGN;
 		ret[1] = Constants.CHAR_NEWLINE_SIGN;
 		return ret;
 	}
-
+	
 	private static char[] newLinuxLineFeed() {
 		char[] ret = new char[1];
 		ret[0] = Constants.CHAR_NEWLINE_SIGN;
 		return ret;
 	}
-
+	
 	/**
 	 * 读取文件
 	 *
@@ -146,7 +146,7 @@ public class FileUtils {
 		}
 		return string;
 	}
-
+	
 	/**
 	 * 写文件
 	 *
@@ -164,9 +164,9 @@ public class FileUtils {
 				}
 			}
 		}
-
+		
 	}
-
+	
 	/**
 	 * 系统换行符号
 	 *
@@ -175,7 +175,7 @@ public class FileUtils {
 	public static String getSystemLineSeparator() {
 		return System.getProperty("line.separator");
 	}
-
+	
 	/**
 	 * 文件复制
 	 *
@@ -189,7 +189,7 @@ public class FileUtils {
 			in.transferTo(0, in.size(), out);
 		}
 	}
-
+	
 	/**
 	 * 获取文件换行符数组
 	 *
@@ -212,9 +212,9 @@ public class FileUtils {
 			String str = new String(fileContent, Charset.forName(sourceEncoding));
 			return getFileLineFeed(str);
 		}
-
+		
 	}
-
+	
 	/**
 	 * 获取系统文件分割符
 	 *
@@ -223,7 +223,7 @@ public class FileUtils {
 	public static String getSystemFileSeparator() {
 		return System.getProperty("file.separator");
 	}
-
+	
 	/**
 	 * 清除多余换行
 	 *
@@ -257,7 +257,7 @@ public class FileUtils {
 			index = index2;
 		}
 	}
-
+	
 	/**
 	 * 获取文件的目录地址
 	 *
@@ -274,5 +274,5 @@ public class FileUtils {
 		}
 		return path;
 	}
-
+	
 }

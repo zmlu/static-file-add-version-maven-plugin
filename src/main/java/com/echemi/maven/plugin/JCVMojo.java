@@ -15,19 +15,19 @@ import java.io.File;
  * @create 2018-08-23 21:44
  **/
 
-@Mojo( name = "process" , defaultPhase = LifecyclePhase.PROCESS_RESOURCES, threadSafe = true)
+@Mojo(name = "process", defaultPhase = LifecyclePhase.PROCESS_RESOURCES, threadSafe = true)
 class JCVMojo extends BaseMojo {
-	@Parameter( defaultValue = "${basedir}/src/main/webapp", property = "webapp", required = true )
+	@Parameter(defaultValue = "${basedir}/src/main/webapp", property = "webapp", required = true)
 	protected File webapp;
-
+	
 	@Override
-	public void execute(){
-		String webRoot=webapp.getPath();
-		if(!webRoot.endsWith(FileUtils.getSystemLineSeparator())){
-			webRoot+= FileUtils.getSystemFileSeparator();
+	public void execute() {
+		String webRoot = webapp.getPath();
+		if (!webRoot.endsWith(FileUtils.getSystemLineSeparator())) {
+			webRoot += FileUtils.getSystemFileSeparator();
 		}
-		String outputRoot=outputDir.getPath()+ FileUtils.getSystemFileSeparator()+webRootName;
-
+		String outputRoot = outputDir.getPath() + FileUtils.getSystemFileSeparator() + webRootName;
+		
 		Config config = new Config();
 		config.setVersionLabel(versionLabel);
 		config.setExcludes(excludes);
@@ -43,7 +43,7 @@ class JCVMojo extends BaseMojo {
 		config.setCdnImageElName(cdnImageElName);
 		config.setElNameIncludePath(elNameIncludePath);
 		
-		ProcessFactory processFactory=new DefaultProcessFactory(config);
+		ProcessFactory processFactory = new DefaultProcessFactory(config);
 		processFactory.buildLoggerFactory(getLog());
 		processFactory.init(webRoot);
 		processFactory.execute();

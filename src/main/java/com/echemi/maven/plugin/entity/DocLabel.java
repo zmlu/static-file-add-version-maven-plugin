@@ -1,10 +1,13 @@
 package com.echemi.maven.plugin.entity;
 
+import lombok.Data;
+
 /**
  * @author jacob
  * created in  2021/3/13 11:05
  * modified By:
  */
+@Data
 public class DocLabel {
 	/**
 	 * 从indexPos位置开始检查标签
@@ -31,85 +34,18 @@ public class DocLabel {
 	 */
 	private String endSign;
 	/**
-	 * 表姐结束位置
+	 * 标签结束位置
 	 */
 	private int endSignPos;
 	/**
 	 * 是否找到此标签
 	 */
 	private boolean hasFind;
-
-	public DocLabel() {
-	}
-
+	
 	public DocLabel(int indexPos, String startSign, String sourceSign, String endSign) {
 		this.indexPos = indexPos;
 		this.startSign = startSign;
 		this.sourceSign = sourceSign;
 		this.endSign = endSign;
-	}
-
-	public int getIndexPos() {
-		return indexPos;
-	}
-
-	public void setIndexPos(int indexPos) {
-		this.indexPos = indexPos;
-	}
-
-	public String getStartSign() {
-		return startSign;
-	}
-
-	public void setStartSign(String startSign) {
-		this.startSign = startSign;
-	}
-
-	public int getStartSignPos() {
-		return startSignPos;
-	}
-
-	public void setStartSignPos(int startSignPos) {
-		this.startSignPos = startSignPos;
-	}
-
-	public String getSourceSign() {
-		return sourceSign;
-	}
-
-	public void setSourceSign(String sourceSign) {
-		this.sourceSign = sourceSign;
-	}
-
-	public int getSourceSignPos() {
-		return sourceSignPos;
-	}
-
-	public void setSourceSignPos(int sourceSignPos) {
-		this.sourceSignPos = sourceSignPos;
-	}
-
-	public String getEndSign() {
-		return endSign;
-	}
-
-	public void setEndSign(String endSign) {
-		this.endSign = endSign;
-	}
-
-	public int getEndSignPos() {
-		return endSignPos;
-	}
-
-	public void setEndSignPos(int endSignPos) {
-		this.endSignPos = endSignPos;
-	}
-
-	public boolean isHasFind() {
-		return hasFind;
-	}
-
-	public void setHasFind(boolean hasFind) {
-		this.hasFind = hasFind;
 	}
 }

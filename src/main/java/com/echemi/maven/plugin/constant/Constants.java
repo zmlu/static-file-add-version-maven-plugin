@@ -6,9 +6,6 @@ package com.echemi.maven.plugin.constant;
  * modified By:
  */
 public class Constants {
-	private Constants() {
-	}
-
 	/**
 	 * 点
 	 */
@@ -24,7 +21,6 @@ public class Constants {
 	 */
 	public static final String STR_BLANK_SPACE = " ";
 	public static final char CHAR_BLANK_SPACE = ' ';
-
 	public static final String EMPTY_STR = "";
 	/**
 	 * 回车 return
@@ -39,14 +35,11 @@ public class Constants {
 	 */
 	public static final String STR_SLANT_LINE = "\\";
 	public static final char CHAR_SLANT_LINE = '\\';
-
 	/**
 	 * 中括号(左)
 	 */
 	public final static String PARENTHESES_LEFT = "[";
-
 	public final static String STR_QUESTION_MARK = "?";
-
 	public final static String STR_AND_MARK = "&";
 	/**
 	 * 问号的正则表达式
@@ -60,8 +53,9 @@ public class Constants {
 	 * 双引号
 	 */
 	public final static char CHAR_DOUBLE_QUOTE_MARK = '"';
-
 	public static final String HTTP_START_HEARD = "http://";
-
 	public static final String HTTPS_START_HEARD = "https://";
+	
+	private Constants() {
+	}
 }

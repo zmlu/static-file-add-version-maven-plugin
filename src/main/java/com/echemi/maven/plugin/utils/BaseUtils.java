@@ -16,9 +16,9 @@ import java.util.List;
  */
 public class BaseUtils {
 	private BaseUtils() {
-
+	
 	}
-
+	
 	/**
 	 * 判断target数组是否在source数组中，从startIndex位置开始
 	 *
@@ -40,7 +40,7 @@ public class BaseUtils {
 		}
 		return true;
 	}
-
+	
 	/**
 	 * 检查下一个字符位置
 	 *
@@ -54,7 +54,7 @@ public class BaseUtils {
 		sub[0] = target;
 		return checkNextCharIndex(source, index, sub);
 	}
-
+	
 	/**
 	 * 检查下一个字符数组位置(由于考虑大数组情况下内存消耗问题，未采用递归模式)
 	 *
@@ -80,7 +80,7 @@ public class BaseUtils {
 		}
 		return -1;
 	}
-
+	
 	/**
 	 * 检查下一个字符串位置
 	 *
@@ -96,7 +96,7 @@ public class BaseUtils {
 		char[] sub = target.toCharArray();
 		return checkNextCharIndex(source, startIndex, sub);
 	}
-
+	
 	/**
 	 * 检查上一个字符的位置
 	 *
@@ -110,10 +110,10 @@ public class BaseUtils {
 			return -1;
 		}
 		char[] target = str.toCharArray();
-
+		
 		int sourceLength = source.length;
 		int targetLength = target.length;
-
+		
 		if (sourceLength - endIndex < targetLength) {
 			return -1;
 		}
@@ -128,7 +128,7 @@ public class BaseUtils {
 		}
 		return -1;
 	}
-
+	
 	/**
 	 * 检查checkStr是否在list中
 	 *
@@ -155,7 +155,7 @@ public class BaseUtils {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * 替换字符串中的所有单个字符
 	 *
@@ -175,8 +175,8 @@ public class BaseUtils {
 		}
 		return sb.toString();
 	}
-
-
+	
+	
 	/**
 	 * 转换为当前系统路径
 	 *
@@ -192,16 +192,16 @@ public class BaseUtils {
 			return replaceAll(path, Constants.CHAR_SLASH, Constants.CHAR_SLANT_LINE);
 		}
 	}
-
+	
 	public static String replaceLinuxSystemLine(final String path) {
 		if (getSystemFileSeparatorIsLinux()) {
 			return path;
 		} else {
 			return StringUtils.isEmpty(path) ? path : replaceAll(path, Constants.CHAR_SLANT_LINE, Constants.CHAR_SLASH);
 		}
-
+		
 	}
-
+	
 	/**
 	 * 获取路径是否linux
 	 *
@@ -210,9 +210,9 @@ public class BaseUtils {
 	public static boolean getSystemFileSeparatorIsLinux() {
 		String property = System.getProperty("file.separator");
 		return Constants.STR_SLASH.equals(property);
-
+		
 	}
-
+	
 	/**
 	 * @param file   文件信息
 	 * @param method 方法(仅支持文件MD5：FILE_MD5 和文件名MD5：FILE_NAME_MD5)

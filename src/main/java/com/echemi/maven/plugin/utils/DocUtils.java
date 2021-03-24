@@ -11,7 +11,7 @@ import org.codehaus.plexus.util.StringUtils;
 public class DocUtils {
 	private DocUtils() {
 	}
-
+	
 	/**
 	 * 获取从指定字符串流中指定文本标签的位置信息
 	 *
@@ -47,45 +47,4 @@ public class DocUtils {
 		}
 		docLabel.setHasFind(true);
 	}
-
-
-	/**
-	 * JS开始标识
-	 */
-	public static final String HTML_JAVASCRIPT_START = "<script";
-	/**
-	 * JS引用标识
-	 */
-	public static final String HTML_JAVASCRIPT_SRC = "src=";
-	/**
-	 * JS结束标识
-	 */
-	public static final String HTML_JAVASCRIPT_END = ">";
-
-	/**
-	 * css开始标识
-	 */
-	public static final String HTML_CSS_START = "<link";
-	/**
-	 * css引用标识
-	 */
-	public static final String HTML_CSS_SRC = "href=";
-	/**
-	 * css结束标识
-	 */
-	public static final String HTML_CSS_END = ">";
-	
-	/**
-	 * css开始标识
-	 */
-	public static final String HTML_IMAGE_START = "<img";
-	/**
-	 * css引用标识
-	 */
-	public static final String HTML_IMAGE_SRC = "src=";
-	/**
-	 * css结束标识
-	 */
-	public static final String HTML_IMAGE_END = ">";
-
 }
