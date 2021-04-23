@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author jacob
@@ -125,7 +127,7 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 		}
 	}
 	
-	private void processLink(PageInfo pageInfo, StringBuffer sb, final int start, final int end, final String historyLink, final FileTypeEnum fileType, List<FileInfo> processSuccessFiles) {
+	private void processLink(PageInfo pageInfo, StringBuffer sb, final int start, int end, final String historyLink, final FileTypeEnum fileType, List<FileInfo> processSuccessFiles) {
 		FileInfo fileInfo = null;
 		StringBuilder fullLink = new StringBuilder();
 		
@@ -171,6 +173,23 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 					globalElPrefix = config.getCdnImageElName();
 					break;
 			}
+			//thymeleaf start
+			String pattern = "\\$\\{" + globalElPrefix + "}\\+'(.*?)'";
+			Pattern p = Pattern.compile(pattern);
+			Matcher matcher = p.matcher(fullLink.toString());
+			if (matcher.find()) {
+				String s = matcher.group(1);
+				if (StringUtils.isNotEmpty(s)) {
+					int sStart = fullLink.indexOf(s);
+					int sEnd = sStart + s.length();
+					int py = fullLink.toString().length() - sEnd;
+					if (py >= 0) {
+						fullLink = new StringBuilder("${" + globalElPrefix + "}" + s);
+						end -= py;
+					}
+				}
+			}
+			//thymeleaf end
 			if (StringUtils.isNotEmpty(globalElEqualStaticPath) && StringUtils.isNotEmpty(globalElPrefix)) {
 				fullLink = new StringBuilder(fullLink.toString().replace("${" + globalElPrefix + "}", globalElEqualStaticPath));
 			}

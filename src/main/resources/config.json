@@ -68,6 +68,13 @@
           "end": ")",
           "with_quote": true,
           "comment": "样式background-image 带引号"
+        },
+        {
+          "start": "<img",
+          "src": "onerror=",
+          "end": ">",
+          "with_quote": true,
+          "comment": "image onerror属性"
         }
       ]
     }
