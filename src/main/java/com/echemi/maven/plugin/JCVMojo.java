@@ -26,7 +26,7 @@ class JCVMojo extends BaseMojo {
 		if (!webRoot.endsWith(FileUtils.getSystemLineSeparator())) {
 			webRoot += FileUtils.getSystemFileSeparator();
 		}
-		String outputRoot = outputDir.getPath() + FileUtils.getSystemFileSeparator() + webRootName;
+		String outputRoot = outputDir.getPath() + (outputDirIncludeWebRootName ? FileUtils.getSystemFileSeparator() + webRootName : "");
 		
 		Config config = new Config();
 		config.setVersionLabel(versionLabel);

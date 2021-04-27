@@ -4,7 +4,7 @@
 
 	<groupId>com.echemi.maven.plugin</groupId>
 	<artifactId>static-file-add-version-maven-plugin</artifactId>
-	<version>0.3.0a</version>
+	<version>0.3.0b</version>
 	<packaging>maven-plugin</packaging>
 
 

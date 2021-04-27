@@ -101,4 +101,10 @@ public abstract class BaseMojo extends AbstractMojo {
 	 */
 	@Parameter(defaultValue = "")
 	protected String elNameIncludePath;
+	
+	/**
+	 * 输出目录是否包含工程名
+	 */
+	@Parameter(defaultValue = "true")
+	protected Boolean outputDirIncludeWebRootName;
 }
