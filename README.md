@@ -28,7 +28,7 @@
 <plugin>
 <groupId>com.echemi.maven.plugin</groupId>
 <artifactId>static-file-add-version-maven-plugin</artifactId>
-<version>0.2.2</version>
+<version>0.3.0</version>
 <executions>
 	<execution>
 		<phase>prepare-package</phase>
@@ -38,17 +38,16 @@
 	</execution>
 </executions>
 <configuration>
-	<cdnJsElName>webRootStaticCdn</cdnJsElName>
-	<cdnCssElName>webRootStaticCdn</cdnCssElName>
-	<cdnImageElName>webRootStaticCdn</cdnImageElName>
-	<elNameIncludePath>static_v3</elNameIncludePath>
+	<cdnJsElName>webRootCdnStatic</cdnJsElName>
+	<cdnCssElName>webRootCdnStatic</cdnCssElName>
+	<cdnImageElName>webRootCdnStatic</cdnImageElName>
+	<elNameIncludePath>static</elNameIncludePath>
 	<suffix>
 		<param>jsp</param>
-		<param>css</param>
 	</suffix>
 </configuration>
 </plugin>
-<!--静态资源添加版本号 结束-->
+		<!--静态资源添加版本号 结束-->
 ```
 
 ### thymleaf
@@ -73,32 +72,32 @@
 	</executions>
 </plugin>
 <plugin>
-	<groupId>com.echemi.maven.plugin</groupId>
-	<artifactId>static-file-add-version-maven-plugin</artifactId>
-	<version>0.3.0</version>
-	<executions>
-		<execution>
-			<phase>prepare-package</phase>
-			<goals>
-				<goal>process</goal>
-			</goals>
-		</execution>
-	</executions>
-	<configuration>
-		<webapp>${basedir}/src/main/resources</webapp>
-		<outputDir>${project.build.directory}/classes</outputDir>
-		<outputDirIncludeWebRootName>false</outputDirIncludeWebRootName>
-		<cdnJsElName>webRootCdnJs</cdnJsElName>
-		<cdnCssElName>webRootCdnCss</cdnCssElName>
-		<cdnImageElName>webRootCdnImage</cdnImageElName>
-		<elNameIncludePath>static/v2</elNameIncludePath>
-		<suffix>
-			<param>html</param>
-			<param>css</param>
-		</suffix>
-	</configuration>
+<groupId>com.echemi.maven.plugin</groupId>
+<artifactId>static-file-add-version-maven-plugin</artifactId>
+<version>0.3.0</version>
+<executions>
+	<execution>
+		<phase>prepare-package</phase>
+		<goals>
+			<goal>process</goal>
+		</goals>
+	</execution>
+</executions>
+<configuration>
+	<webapp>${basedir}/src/main/resources</webapp>
+	<outputDir>${project.build.directory}/classes</outputDir>
+	<outputDirIncludeWebRootName>false</outputDirIncludeWebRootName>
+	<cdnJsElName>webRootCdnJs</cdnJsElName>
+	<cdnCssElName>webRootCdnCss</cdnCssElName>
+	<cdnImageElName>webRootCdnImage</cdnImageElName>
+	<elNameIncludePath>static/v2</elNameIncludePath>
+	<suffix>
+		<param>html</param>
+		<param>css</param>
+	</suffix>
+</configuration>
 </plugin>
-<!--静态资源添加版本号 结束-->
+		<!--静态资源添加版本号 结束-->
 ```
 ### 打包
 
