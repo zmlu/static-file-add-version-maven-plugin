@@ -72,7 +72,7 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 		if (withQuote) {
 			char endChar = cas[docLabel.getSourceSignPos()];
 			if (endChar != Constants.CHAR_SINGLE_QUOTE_MARK && endChar != Constants.CHAR_DOUBLE_QUOTE_MARK) {
-				return -1;
+				return processVersion(pageInfo, html, docLabel.getEndSignPos(), processSuccessFiles, fileType, fileTypeSettings);
 			}
 			index = docLabel.getSourceSignPos() - 1;
 			index = index < 0 ? 0 : index;
@@ -174,9 +174,26 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 					break;
 			}
 			//thymeleaf start
+			// 情况1：判断中间含有 ${cdnEl}+'path'
 			String pattern = "\\$\\{" + globalElPrefix + "}\\+'(.*?)'";
 			Pattern p = Pattern.compile(pattern);
 			Matcher matcher = p.matcher(fullLink.toString());
+			if (matcher.find()) {
+				String s = matcher.group(1);
+				if (StringUtils.isNotEmpty(s)) {
+					int sStart = fullLink.indexOf(s);
+					int sEnd = sStart + s.length();
+					int py = fullLink.toString().length() - sEnd;
+					if (py >= 0) {
+						fullLink = new StringBuilder("${" + globalElPrefix + "}" + s);
+						end -= py;
+					}
+				}
+			}
+			// 情况2：判断中间含有 |${cdnEl}path|
+			pattern = "\\|\\$\\{" + globalElPrefix + "}(.*?)\\|";
+			p = Pattern.compile(pattern);
+			matcher = p.matcher(fullLink.toString());
 			if (matcher.find()) {
 				String s = matcher.group(1);
 				if (StringUtils.isNotEmpty(s)) {

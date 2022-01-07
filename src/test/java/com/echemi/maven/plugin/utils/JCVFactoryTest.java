@@ -12,19 +12,19 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 
-/**  
-* @Package 
+/**
+* @Package
 *	 com.echemi.maven.plugin.utils
-* @ClassName: 
-*	 JCVFactoryTest  
-* @since 
+* @ClassName:
+*	 JCVFactoryTest
+* @since
 *	  V1.0
-* @author 
-*		jacob   
-* @date 
+* @author
+*		jacob
+* @date
 *		2021/03/07-13:56:29
-* @version 
-*		V1.0      
+* @version
+*		V1.0
 */
 @SuppressWarnings({"unused"})
 public class JCVFactoryTest {
@@ -32,23 +32,23 @@ public class JCVFactoryTest {
     
     @Test
     public void test(){
-//        Config config = new Config();
-//        config.setVersionLabel("v");
-//        config.setSourceEncoding("UTF-8");
-//        config.setIncludes(Collections.<String>emptyList());
-//        config.setExcludes(Collections.<String>emptyList());
-//        config.setDomains(Collections.<String>emptyList());
-//        config.setMethod(MethodEnum.MD5_METHOD);
-//        config.setSuffix(Arrays.asList("html","css"));
-//        config.setOutDirRoot("/Users/jacob/Downloads/test");
-//        config.setCdnJsElName("webRootCdnJs");
-//        config.setCdnCssElName("webRootCdnCss");
-//        config.setCdnImageElName("webRootCdnImage");
-//        config.setElNameIncludePath("static/v2");
-//
-//        ProcessFactory processFactory=new DefaultProcessFactory(config);
-//        processFactory.buildLoggerFactory(logger);
-//        processFactory.init("/Users/jacob/dev/svn/echemi/SOURCE/JAVA/Branch/echemi_eu/src/main/resources");
-//        processFactory.execute();
+        Config config = new Config();
+        config.setVersionLabel("v");
+        config.setSourceEncoding("UTF-8");
+        config.setIncludes(Collections.<String>emptyList());
+        config.setExcludes(Collections.<String>emptyList());
+        config.setDomains(Collections.<String>emptyList());
+        config.setMethod(MethodEnum.MD5_METHOD);
+        config.setSuffix(Arrays.asList("html","css"));
+        config.setOutDirRoot("/Users/jacob/Downloads/test");
+        config.setCdnJsElName("webRootCdnJs");
+        config.setCdnCssElName("webRootCdnCss");
+        config.setCdnImageElName("webRootCdnImage");
+        config.setElNameIncludePath("static");
+
+        ProcessFactory processFactory=new DefaultProcessFactory(config);
+        processFactory.buildLoggerFactory(logger);
+        processFactory.init("/Users/jacob/dev/svn/echemi/SOURCE/JAVA/Branch/echemi_group/src/main/resources");
+        processFactory.execute();
     }
 }
