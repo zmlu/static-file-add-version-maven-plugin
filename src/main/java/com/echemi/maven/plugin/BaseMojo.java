@@ -107,4 +107,10 @@ public abstract class BaseMojo extends AbstractMojo {
 	 */
 	@Parameter(defaultValue = "true")
 	protected Boolean outputDirIncludeWebRootName;
+	
+	/**
+	 * 是否压缩输出文件
+	 */
+	@Parameter(defaultValue = "false")
+	protected Boolean compressOutput;
 }

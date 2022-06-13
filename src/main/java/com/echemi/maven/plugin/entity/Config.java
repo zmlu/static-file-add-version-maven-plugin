@@ -76,6 +76,11 @@ public class Config {
 	 * 全局EL前缀替换成的本地静态资源目录
 	 */
 	private String elNameIncludePath;
+	/**
+	 * 是否压缩输出文件
+	 */
+	private boolean compressOutput;
+	
 	private int versionLength;
 	private boolean inName;
 	

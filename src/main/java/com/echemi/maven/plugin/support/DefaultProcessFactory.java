@@ -9,6 +9,7 @@ import com.echemi.maven.plugin.entity.FileInfo;
 import com.echemi.maven.plugin.entity.PageInfo;
 import com.echemi.maven.plugin.utils.BaseUtils;
 import com.echemi.maven.plugin.utils.FileUtils;
+import com.echemi.maven.plugin.utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,11 +17,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * @author jacob
- * created in  2021/3/13 15:22
- * modified By:
+ * @author jacob created in  2021/3/13 15:22 modified By:
  */
 public class DefaultProcessFactory extends AbstractProcessFactory {
 	public DefaultProcessFactory(Config config) {
@@ -74,7 +74,6 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 		for (PageInfo pageInfo : pages) {
 			try {
 				String strAll = FileUtils.readFileToStr(pageInfo.getFile(), config.getSourceEncoding());
-				List<String> saveHtml = new ArrayList<>();
 				if (strAll == null || strAll.length() == 0) {
 					continue;
 				}
@@ -88,7 +87,46 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 						processVersion(pageInfo, sb, 0, processSuccessFiles, FileTypeEnum.valueOf(fileTypeStr), settings.getJSONObject(i));
 					}
 				}
-				saveHtml.add(sb.toString());
+				List<String> saveHtml = new ArrayList<>();
+				if (StringUtils.isNotEmpty(sb)) {
+					String lowerCase = pageInfo.getOutFile().getName().toLowerCase();
+					if (config.isCompressOutput() && lowerCase.endsWith(".css")) {
+						String allStr = sb.toString();
+						allStr = allStr.replaceAll("\t", " "); // tab替换为空格
+						allStr = allStr.replaceAll("/\\*.*\\*/", ""); // /**/类型注释
+						allStr = allStr.replaceAll("/<!--.?-->/", ""); // /**/类型注释
+						String[] temp = allStr.split("\n");
+						for (String s : temp) {
+							s = s.trim(); // 去除前后空格
+							if (s.startsWith("//")) { // //开头的注释跳过
+								continue;
+							}
+							if (s.contains("//")&&(s.contains("'")||s.contains("\""))) {
+								int i = s.indexOf("//");
+								int j = 0;
+								if (s.contains("'")) {
+									j = s.lastIndexOf("'");
+								}
+								if (s.contains("\"")) {
+									j = s.lastIndexOf("\"");
+								}
+								if (j > 0 && j < i) {
+									s = s.substring(0, i);
+								}
+							}
+							if (s.startsWith("function")) { // js function 前添加; 防止弄成一行后识别不了
+								s = ";" + s;
+							}
+							s = s.replaceAll("\r", "");
+							saveHtml.add(s); //结尾加空格，防止class名字连在一起
+						}
+						allStr = saveHtml.stream().collect(Collectors.joining("\r\n"));
+						allStr = allStr.replaceAll(">.?(\\s)<", ""); // 合并成一行
+						saveHtml.add(allStr);
+					} else {
+						saveHtml.add(sb.toString());
+					}
+				}
 				logger.debug("page:" + pageInfo.getFile().getName() + " Processing is complete");
 				FileUtils.writeFile(pageInfo.getOutFile(), config.getSourceEncoding(), saveHtml);
 			} catch (IOException e) {

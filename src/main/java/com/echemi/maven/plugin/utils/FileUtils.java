@@ -30,7 +30,14 @@ public class FileUtils {
 	public static void collectFiles(List<File> collected, File file, List<String> suffixes) {
 		if (file.isFile()) {
 			for (String suffix : suffixes) {
-				if (file.getName().toLowerCase().endsWith(Constants.STR_DOT + suffix.toLowerCase())) {
+				String lowerCase = file.getName().toLowerCase();
+				if (lowerCase.endsWith(Constants.STR_DOT + suffix.toLowerCase())) {
+					if (lowerCase.contains(".min.")){
+						continue; // 压缩的文件跳过处理
+					}
+					if (lowerCase.endsWith(".js")&&!lowerCase.startsWith("pagejs_")){
+						continue; // 非pagejs_的js不处理
+					}
 					collected.add(file);
 					break;
 				}
@@ -160,7 +167,6 @@ public class FileUtils {
 			for (String str : strList) {
 				if (StringUtils.isNotEmpty(str)) {
 					out.write(str.getBytes(Charset.forName(sourceEncoding)));
-					out.write(getSystemLineSeparator().getBytes(Charset.forName(sourceEncoding)));
 				}
 			}
 		}
