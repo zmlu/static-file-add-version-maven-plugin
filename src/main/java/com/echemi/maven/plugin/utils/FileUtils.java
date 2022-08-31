@@ -32,9 +32,6 @@ public class FileUtils {
 			for (String suffix : suffixes) {
 				String lowerCase = file.getName().toLowerCase();
 				if (lowerCase.endsWith(Constants.STR_DOT + suffix.toLowerCase())) {
-					if (lowerCase.contains(".min.")){
-						continue; // 压缩的文件跳过处理
-					}
 					collected.add(file);
 					break;
 				}
