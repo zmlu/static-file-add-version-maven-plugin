@@ -40,7 +40,7 @@ public class JCVFactoryTest {
         config.setDomains(Collections.<String>emptyList());
         config.setMethod(MethodEnum.MD5_METHOD);
         config.setSuffix(Arrays.asList("html","css"));
-        config.setOutDirRoot("/Users/jacob/Downloads/test");
+        config.setOutDirRoot("~/Downloads/test");
         config.setCdnJsElName("webRootCdnJs");
         config.setCdnCssElName("webRootCdnCss");
         config.setCdnImageElName("webRootCdnImage");
@@ -62,7 +62,7 @@ public class JCVFactoryTest {
         config.setDomains(Collections.<String>emptyList());
         config.setMethod(MethodEnum.MD5_METHOD);
         config.setSuffix(Arrays.asList("jsp","css","js"));
-        config.setOutDirRoot("/Users/jacob/Downloads/echemi_web_en_test");
+        config.setOutDirRoot("~/Downloads/echemi_web_en_test");
         config.setCdnJsElName("webRootStaticCdn");
         config.setCdnCssElName("webRootStaticCdn");
         config.setCdnImageElName("webRootStaticCdn");

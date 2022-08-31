@@ -35,9 +35,6 @@ public class FileUtils {
 					if (lowerCase.contains(".min.")){
 						continue; // 压缩的文件跳过处理
 					}
-					if (lowerCase.endsWith(".js")&&!lowerCase.startsWith("pagejs_")){
-						continue; // 非pagejs_的js不处理
-					}
 					collected.add(file);
 					break;
 				}

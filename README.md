@@ -105,3 +105,9 @@
 mvn clean install
 ```
 注意该插件不会在idea中生效，在package后才会生效
+
+### 发布
+
+```
+clean deploy -Prelease -Dmaven.test.skip=true
+```
