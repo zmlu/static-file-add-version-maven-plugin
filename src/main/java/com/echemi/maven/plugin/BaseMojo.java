@@ -113,4 +113,9 @@ public abstract class BaseMojo extends AbstractMojo {
 	 */
 	@Parameter(defaultValue = "false")
 	protected Boolean compressOutput;
+	/**
+	 * 是否把文件名替换成版本号
+	 */
+	@Parameter(defaultValue = "false")
+	protected Boolean inName;
 }

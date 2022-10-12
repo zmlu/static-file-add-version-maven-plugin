@@ -5,6 +5,7 @@ import com.echemi.maven.plugin.constant.MethodEnum;
 import com.echemi.maven.plugin.utils.JsonUtils;
 import lombok.Data;
 import lombok.Getter;
+import org.apache.maven.plugins.annotations.Parameter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,6 +84,15 @@ public class Config {
 	
 	private int versionLength;
 	private boolean inName;
+	private boolean upload2OSS;
+	
+	private String aliyunOSSaccessKeyId;
+	
+	private String aliyunOSSaccessKeySecret;
+	
+	private String aliyunOSSendpoint;
+	
+	private String aliyunOSSbucketName;
 	
 	public static ArrayList<String> getSuffixList() {
 		ArrayList<String> rtnArray = new ArrayList<>();

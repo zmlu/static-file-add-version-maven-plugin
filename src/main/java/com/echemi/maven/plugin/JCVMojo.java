@@ -43,6 +43,8 @@ class JCVMojo extends BaseMojo {
 		config.setCdnImageElName(cdnImageElName);
 		config.setElNameIncludePath(elNameIncludePath);
 		config.setCompressOutput(compressOutput);
+		config.setInName(inName);
+		config.setVersionLength(6);
 		
 		ProcessFactory processFactory = new DefaultProcessFactory(config);
 		processFactory.buildLoggerFactory(getLog());

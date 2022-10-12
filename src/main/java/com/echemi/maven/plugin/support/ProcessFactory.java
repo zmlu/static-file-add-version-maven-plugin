@@ -21,11 +21,6 @@ public interface ProcessFactory {
 	void execute();
 	
 	/**
-	 * 执行成功后的处理
-	 */
-	void success();
-	
-	/**
 	 * 创建日志
 	 *
 	 * @param logger 日志处理器

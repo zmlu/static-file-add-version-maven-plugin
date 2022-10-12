@@ -43,9 +43,9 @@ public class FileInfo {
 	private String relativelyFilePath;
 	
 	/**
-	 * 文件是否被复制
+	 * 文件是否需要被重命名
 	 **/
-	private boolean hasCopy = false;
+	private boolean needRename = false;
 	
 	public String getFileType() {
 		return fileType;
@@ -103,12 +103,12 @@ public class FileInfo {
 		this.relativelyFilePath = relativelyFilePath;
 	}
 	
-	public boolean isHasCopy() {
-		return hasCopy;
+	public boolean isNeedRename() {
+		return needRename;
 	}
 	
-	public void setHasCopy(boolean hasCopy) {
-		this.hasCopy = hasCopy;
+	public void setNeedRename(boolean needRename) {
+		this.needRename = needRename;
 	}
 	
 	@Override
@@ -121,7 +121,7 @@ public class FileInfo {
 		sb.append(", fileVersion='").append(fileVersion).append('\'');
 		sb.append(", fileHashKey='").append(fileHashKey).append('\'');
 		sb.append(", relativelyFilePath='").append(relativelyFilePath).append('\'');
-		sb.append(", hasCopy=").append(hasCopy);
+		sb.append(", needRename='").append(needRename);
 		sb.append('}');
 		return sb.toString();
 	}

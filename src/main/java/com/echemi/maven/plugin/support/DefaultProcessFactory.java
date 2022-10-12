@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author jacob created in  2021/3/13 15:22 modified By:
@@ -35,9 +34,9 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 		}
 		
 		getFileInfo(files, webapp, Config.getSuffixList());
-		for (Map.Entry<String, FileInfo> file : files.entrySet()) {
-			logger.debug("find type:" + file.getValue().getFileType() + " file:" + file.getKey() + " md5:" + file.getValue().getFileVersion());
-		}
+//		for (Map.Entry<String, FileInfo> file : files.entrySet()) {
+//			logger.debug("find type:" + file.getValue().getFileType() + " file:" + file.getKey() + " md5:" + file.getValue().getFileVersion());
+//		}
 		if (pages == null) {
 			pages = new ArrayList<>();
 		}
@@ -48,7 +47,7 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 			String path = pageInfo.getFile().getPath();
 			path = path.substring(webapp.length(), path.length());
 			String temp;
-			if (path.endsWith(FileUtils.getSystemFileSeparator())) {
+			if (path.startsWith(FileUtils.getSystemFileSeparator())) {
 				temp = out + path;
 			} else {
 				temp = out + FileUtils.getSystemFileSeparator() + path;
@@ -89,56 +88,47 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 				}
 				List<String> saveHtml = new ArrayList<>();
 				if (StringUtils.isNotEmpty(sb)) {
-					String lowerCase = pageInfo.getOutFile().getName().toLowerCase();
-					if (config.isCompressOutput() && lowerCase.endsWith(".css")) {
-						String allStr = sb.toString();
-						allStr = allStr.replaceAll("\t", " "); // tab替换为空格
-						allStr = allStr.replaceAll("/\\*.*\\*/", ""); // /**/类型注释
-						allStr = allStr.replaceAll("/<!--.?-->/", ""); // /**/类型注释
-						String[] temp = allStr.split("\n");
-						for (String s : temp) {
-							s = s.trim(); // 去除前后空格
-							if (s.startsWith("//")) { // //开头的注释跳过
-								continue;
-							}
-							if (s.contains("//")&&(s.contains("'")||s.contains("\""))) {
-								int i = s.indexOf("//");
-								int j = 0;
-								if (s.contains("'")) {
-									j = s.lastIndexOf("'");
-								}
-								if (s.contains("\"")) {
-									j = s.lastIndexOf("\"");
-								}
-								if (j > 0 && j < i) {
-									s = s.substring(0, i);
-								}
-							}
-							if (s.startsWith("function")) { // js function 前添加; 防止弄成一行后识别不了
-								s = ";" + s;
-							}
-							s = s.replaceAll("\r", "");
-							saveHtml.add(s); //结尾加空格，防止class名字连在一起
-						}
-						allStr = saveHtml.stream().collect(Collectors.joining("\r\n"));
-						allStr = allStr.replaceAll(">.?(\\s)<", ""); // 合并成一行
-						saveHtml.add(allStr);
-					} else {
-						saveHtml.add(sb.toString());
-					}
+					saveHtml.add(sb.toString());
 				}
-				logger.debug("page:" + pageInfo.getFile().getName() + " Processing is complete");
+//				logger.debug("page:" + pageInfo.getFile().getName() + " Processing is complete");
 				FileUtils.writeFile(pageInfo.getOutFile(), config.getSourceEncoding(), saveHtml);
 			} catch (IOException e) {
 				logger.error(" the file process error :" + pageInfo.getFile().getPath(), e);
 			}
-			
 		}
-	}
-	
-	@Override
-	public void success() {
-	
+		
+		String out = config.getOutDirRoot();
+		for (String fileInfoKey : files.keySet()) {
+			FileInfo fileInfo = files.get(fileInfoKey);
+			if (fileInfo.isNeedRename()) {
+				try {
+					// 将文件重命名
+					String pathDest = fileInfo.getFile().getPath();
+					pathDest = pathDest.replaceAll(fileInfo.getFileName(), fileInfo.getFinalFileName());
+					pathDest = pathDest.substring(webapp.length(), pathDest.length());
+					String tempDest;
+					if (pathDest.startsWith(FileUtils.getSystemFileSeparator())) {
+						tempDest = out + pathDest;
+					} else {
+						tempDest = out + FileUtils.getSystemFileSeparator() + pathDest;
+					}
+					File destFile = new File(tempDest);
+					
+					String path = fileInfo.getFile().getPath();
+					path = path.substring(webapp.length());
+					String temp;
+					if (path.startsWith(FileUtils.getSystemFileSeparator())) {
+						temp = out + path;
+					} else {
+						temp = out + FileUtils.getSystemFileSeparator() + path;
+					}
+					File destOriginalFile = new File(temp);
+					destOriginalFile.renameTo(destFile);
+				} catch (Exception e) {
+					logger.error(" the fileInfo process error :" + fileInfo.getFile().getPath(), e);
+				}
+			}
+		}
 	}
 	
 	private void getFileInfo(Map<String, FileInfo> collected, final String rootPath, final List<String> suffix) {
@@ -174,9 +164,7 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 				fileInfo.setFileHashKey(System.currentTimeMillis() + "");
 			}
 			collected.put(path, fileInfo);
-			file = null;
 		}
-		
 	}
 	
 	private void getProcessPage(List<PageInfo> files, String webapp, List<String> suffix) {

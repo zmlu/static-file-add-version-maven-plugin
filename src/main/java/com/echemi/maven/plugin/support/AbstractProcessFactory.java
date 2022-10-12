@@ -95,7 +95,7 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 			System.arraycopy(cas, docLabel.getStartSignPos() + 1, links, 0, length);
 			String link = new String(links);
 			if (!getUrlPar(link).contains(config.getVersionLabel() + "=")) {
-				logger.debug("find " + fileType + " link:" + link);
+//				logger.debug("find " + fileType + " link:" + link);
 				processLink(pageInfo, html, docLabel.getStartSignPos() - 1, docLabel.getSourceSignPos() - 1, link, fileType, processSuccessFiles);
 			}
 			return processVersion(pageInfo, html, docLabel.getEndSignPos(), processSuccessFiles, fileType, fileTypeSettings);
@@ -120,7 +120,7 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 			System.arraycopy(cas, docLabel.getStartSignPos(), links, 0, length);
 			String link = new String(links);
 			if (!getUrlPar(link).contains(config.getVersionLabel() + "=")) {
-				logger.debug("find " + fileType + " link:" + link);
+//				logger.debug("find " + fileType + " link:" + link);
 				processLink(pageInfo, html, docLabel.getStartSignPos() - 1, docLabel.getSourceSignPos() - 1, link, fileType, processSuccessFiles);
 			}
 			return processVersion(pageInfo, html, docLabel.getSourceSignPos() - 1, processSuccessFiles, fileType, fileTypeSettings);
@@ -232,7 +232,7 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 	
 	private void insertVersion(StringBuffer sb, final int start, final int end, final String historyLink, String fullLink, FileInfo fileInfo, List<FileInfo> processSuccessFiles) {
 		if (fileInfo != null) {
-			logger.debug("process link:" + historyLink + " : " + fullLink);
+//			logger.debug("process link:" + historyLink + " : " + fullLink);
 			String versionStr = "";
 			if (!checkIsSkip(fileInfo, config)) {
 				versionStr = getVersionStr(fileInfo, config.isInName(), historyLink);
@@ -268,8 +268,9 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 		}
 		String versionStr;
 		if (isInName) {
-			versionStr = version + Constants.STR_DOT + fileInfo.getFileType();
+			versionStr = fileInfo.getFileName().replace(Constants.STR_DOT+fileInfo.getFileType(),"")+"_"+ config.getVersionLabel() + version + Constants.STR_DOT + fileInfo.getFileType();
 			fileInfo.setFinalFileName(versionStr);
+			fileInfo.setNeedRename(true);
 			if (StringUtils.isNotEmpty(param)) {
 				versionStr += Constants.STR_QUESTION_MARK + param;
 			}
