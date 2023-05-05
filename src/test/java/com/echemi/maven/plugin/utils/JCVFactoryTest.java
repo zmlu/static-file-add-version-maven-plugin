@@ -9,9 +9,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 /**
 * @Package
@@ -59,11 +57,14 @@ public class JCVFactoryTest {
 //        config.setVersionLabel("v");
 //        config.setSourceEncoding("UTF-8");
 //        config.setIncludes(Collections.<String>emptyList());
-//        config.setExcludes(Collections.<String>emptyList());
+//        List<String> excludes = new ArrayList<>();
+//        excludes.add("static_v3/js/pdfjs-3.4.120-dist/");
+//        excludes.add("static_v3/wap/js/pdfjs-3.4.120-dist/");
+//        config.setExcludes(excludes);
 //        config.setDomains(Collections.<String>emptyList());
 //        config.setMethod(MethodEnum.MD5_METHOD);
-//        config.setSuffix(Arrays.asList("jsp","css","js"));
-//        config.setOutDirRoot("/Users/luzhoumin/Downloads/echemi_web_en_test");
+//        config.setSuffix(Arrays.asList("jsp","css"));
+//        config.setOutDirRoot("C:\\Users\\toben\\Downloads\\echemi_web_en_test");
 //        config.setCdnJsElName("webRootStaticCdn");
 //        config.setCdnCssElName("webRootStaticCdn");
 //        config.setCdnImageElName("webRootStaticCdn");
@@ -73,7 +74,7 @@ public class JCVFactoryTest {
 //
 //        ProcessFactory processFactory=new DefaultProcessFactory(config);
 //        processFactory.buildLoggerFactory(logger);
-//        processFactory.init("/Volumes/SSD/codeup/echemi_web_en/src/main/webapp");
+//        processFactory.init("C:\\dev\\codeup\\echemi_web_en\\src\\main\\webapp");
 //        processFactory.execute();
 //    }
 }

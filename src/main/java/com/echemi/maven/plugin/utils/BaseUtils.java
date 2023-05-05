@@ -146,7 +146,7 @@ public class BaseUtils {
 		}
 		if (isLike) {
 			for (String bean : list) {
-				if (StringUtils.isNotEmpty(bean) && bean.contains(checkStr)) {
+				if (StringUtils.isNotEmpty(bean) && checkStr.startsWith(bean)) {
 					return true;
 				}
 			}

@@ -236,6 +236,8 @@ public abstract class AbstractProcessFactory implements ProcessFactory {
 			String versionStr = "";
 			if (!checkIsSkip(fileInfo, config)) {
 				versionStr = getVersionStr(fileInfo, config.isInName(), historyLink);
+			} else {
+				versionStr = fileInfo.getFileName();
 			}
 			processSuccessFiles.add(fileInfo);
 			if (config.isInName()) {
