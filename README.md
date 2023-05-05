@@ -9,45 +9,52 @@
 ```xml
 <!--静态资源添加版本号 开始-->
 <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-war-plugin</artifactId>
-	<version>3.2.3</version>
-	<configuration>
-		<useCache>true</useCache>
-	</configuration>
-	<executions>
-		<execution>
-			<id>prepare-war</id>
-			<phase>prepare-package</phase>
-			<goals>
-				<goal>exploded</goal>
-			</goals>
-		</execution>
-	</executions>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-war-plugin</artifactId>
+    <version>3.2.3</version>
+    <configuration>
+        <useCache>true</useCache>
+    </configuration>
+    <executions>
+        <execution>
+            <id>prepare-war</id>
+            <phase>prepare-package</phase>
+            <goals>
+                <goal>exploded</goal>
+            </goals>
+        </execution>
+    </executions>
 </plugin>
 <plugin>
-<groupId>com.echemi.maven.plugin</groupId>
-<artifactId>static-file-add-version-maven-plugin</artifactId>
-<version>0.3.0</version>
-<executions>
-	<execution>
-		<phase>prepare-package</phase>
-		<goals>
-			<goal>process</goal>
-		</goals>
-	</execution>
-</executions>
-<configuration>
-	<cdnJsElName>webRootCdnStatic</cdnJsElName>
-	<cdnCssElName>webRootCdnStatic</cdnCssElName>
-	<cdnImageElName>webRootCdnStatic</cdnImageElName>
-	<elNameIncludePath>static</elNameIncludePath>
-	<suffix>
-		<param>jsp</param>
-	</suffix>
-</configuration>
+    <groupId>com.echemi.maven.plugin</groupId>
+    <artifactId>static-file-add-version-maven-plugin</artifactId>
+    <version>0.5.4</version>
+    <executions>
+        <execution>
+            <phase>prepare-package</phase>
+            <goals>
+                <goal>process</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>
+        <cdnJsElName>webRootStaticCdn</cdnJsElName>
+        <cdnCssElName>webRootStaticCdn</cdnCssElName>
+        <cdnImageElName>webRootStaticCdn</cdnImageElName>
+        <elNameIncludePath>static_v3</elNameIncludePath>
+        <suffix>
+            <param>jsp</param>
+            <param>css</param>
+        </suffix>
+        <compressOutput>false</compressOutput>
+        <inName>true</inName>
+        <excludes>
+            <exclude>static_v3/js/pdfjs-3.4.120-dist/</exclude>
+            <exclude>static_v3/wap/js/pdfjs-3.4.120-dist/</exclude>
+        </excludes>
+    </configuration>
 </plugin>
-		<!--静态资源添加版本号 结束-->
+<!--静态资源添加版本号 结束-->
 ```
 
 ### thymleaf
