@@ -139,3 +139,7 @@ mvn clean install
 * `outputDirIncludeWebRootName`: Whether the output directory contains the project name
 * `compressOutput`: Whether to compress the output file
 * `inName`: Whether to replace the file name with the version number
+
+# License
+
+`static-file-add-version-maven-plugin` is released under the terms of the MIT license. See [COPYING](LICENSE) for more information or see https://opensource.org/licenses/MIT.
