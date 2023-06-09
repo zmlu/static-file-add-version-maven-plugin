@@ -1,5 +1,7 @@
 package com.echemi.maven.plugin.support;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileNameUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.echemi.maven.plugin.constant.FileTypeEnum;
@@ -26,14 +28,14 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 	public DefaultProcessFactory(Config config) {
 		super(config);
 	}
-	
+
 	@Override
 	public void init(final String webapp) {
 		this.webapp = webapp;
 		if (files == null) {
 			files = new HashMap<>(64);
 		}
-		
+
 		getFileInfo(files, webapp, Config.getSuffixList());
 //		for (Map.Entry<String, FileInfo> file : files.entrySet()) {
 //			logger.debug("find type:" + file.getValue().getFileType() + " file:" + file.getKey() + " md5:" + file.getValue().getFileVersion());
@@ -42,7 +44,7 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 			pages = new ArrayList<>();
 		}
 		getProcessPage(pages, webapp, config.getSuffix());
-		
+
 		String out = config.getOutDirRoot();
 		for (PageInfo pageInfo : pages) {
 			String path = pageInfo.getFile().getPath();
@@ -60,11 +62,11 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 				file.mkdirs();
 			}
 			pageInfo.setOutFile(new File(temp));
-			
+
 		}
-		
+
 	}
-	
+
 	@Override
 	public void execute() {
 		if (null == config) {
@@ -97,24 +99,13 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 				logger.error(" the file process error :" + pageInfo.getFile().getPath(), e);
 			}
 		}
-		
+
 		String out = config.getOutDirRoot();
 		for (String fileInfoKey : files.keySet()) {
 			FileInfo fileInfo = files.get(fileInfoKey);
 			if (fileInfo.getFinalFileName()!=null && fileInfo.isNeedRename()) {
 				try {
 					// 将文件重命名
-					String pathDest = fileInfo.getFile().getPath();
-					pathDest = pathDest.replaceAll(fileInfo.getFileName(), fileInfo.getFinalFileName());
-					pathDest = pathDest.substring(webapp.length(), pathDest.length());
-					String tempDest;
-					if (pathDest.startsWith(FileUtils.getSystemFileSeparator())) {
-						tempDest = out + pathDest;
-					} else {
-						tempDest = out + FileUtils.getSystemFileSeparator() + pathDest;
-					}
-					File destFile = new File(tempDest);
-
 					String path = fileInfo.getFile().getPath();
 					path = path.substring(webapp.length());
 					String temp;
@@ -125,11 +116,11 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 					}
 					File destOriginalFile = new File(temp);
 					// 重命名
-					destOriginalFile.renameTo(destFile);
-					// 删除原来命名的文件
-					destOriginalFile.delete();
-					// 修改新命名文件时间为原来的时间
-					destFile.setLastModified(fileInfo.getLastModified());
+					File renamedFile = FileUtil.rename(destOriginalFile, fileInfo.getFinalFileName(), true);
+					// 删除原来文件
+					FileUtil.del(destOriginalFile);
+					// 更新新文件的时间戳
+					renamedFile.setLastModified(fileInfo.getLastModified());
 				} catch (Exception e) {
 					logger.error(" the fileInfo process error :" + fileInfo.getFile().getPath(), e);
 				}
