@@ -12,6 +12,7 @@ import com.echemi.maven.plugin.utils.FileUtils;
 import com.echemi.maven.plugin.utils.StringUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,7 +114,7 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 						tempDest = out + FileUtils.getSystemFileSeparator() + pathDest;
 					}
 					File destFile = new File(tempDest);
-					
+
 					String path = fileInfo.getFile().getPath();
 					path = path.substring(webapp.length());
 					String temp;
@@ -123,22 +124,15 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 						temp = out + FileUtils.getSystemFileSeparator() + path;
 					}
 					File destOriginalFile = new File(temp);
+					// 重命名
 					destOriginalFile.renameTo(destFile);
+					// 删除原来命名的文件
+					destOriginalFile.delete();
+					// 修改新命名文件时间为原来的时间
+					destFile.setLastModified(fileInfo.getLastModified());
 				} catch (Exception e) {
 					logger.error(" the fileInfo process error :" + fileInfo.getFile().getPath(), e);
 				}
-			} else {
-				// 将原来的file的修改时间同步到新文件
-				String path = fileInfo.getFile().getPath();
-				path = path.substring(webapp.length());
-				String temp;
-				if (path.startsWith(FileUtils.getSystemFileSeparator())) {
-					temp = out + path;
-				} else {
-					temp = out + FileUtils.getSystemFileSeparator() + path;
-				}
-				File destOriginalFile = new File(temp);
-				destOriginalFile.setLastModified(fileInfo.getFile().lastModified());
 			}
 		}
 	}
@@ -168,6 +162,7 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 			fileInfo.setFileVersion(getFileVersion(file, config.getMethod()));
 			fileInfo.setRelativelyFilePath(path);
 			fileInfo.setFileName(file.getName());
+			fileInfo.setLastModified(file.lastModified());
 			fileInfo.setFile(file);
 			try {
 				fileInfo.setFileHashKey(BaseUtils.getFileHashKey(file, MethodEnum.MD5_METHOD.getMethod()));

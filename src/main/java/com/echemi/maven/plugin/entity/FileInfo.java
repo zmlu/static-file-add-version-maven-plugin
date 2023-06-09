@@ -46,7 +46,8 @@ public class FileInfo {
 	 * 文件是否需要被重命名
 	 **/
 	private boolean needRename = false;
-	
+	private long lastModified = System.currentTimeMillis();
+
 	public String getFileType() {
 		return fileType;
 	}
@@ -124,5 +125,13 @@ public class FileInfo {
 		sb.append(", needRename='").append(needRename);
 		sb.append('}');
 		return sb.toString();
+	}
+
+	public long getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(long lastModified) {
+		this.lastModified = lastModified;
 	}
 }
