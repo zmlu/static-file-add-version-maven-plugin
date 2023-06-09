@@ -100,7 +100,7 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 		String out = config.getOutDirRoot();
 		for (String fileInfoKey : files.keySet()) {
 			FileInfo fileInfo = files.get(fileInfoKey);
-			if (fileInfo.isNeedRename()) {
+			if (fileInfo.getFinalFileName()!=null && fileInfo.isNeedRename()) {
 				try {
 					// 将文件重命名
 					String pathDest = fileInfo.getFile().getPath();
@@ -127,6 +127,18 @@ public class DefaultProcessFactory extends AbstractProcessFactory {
 				} catch (Exception e) {
 					logger.error(" the fileInfo process error :" + fileInfo.getFile().getPath(), e);
 				}
+			} else {
+				// 将原来的file的修改时间同步到新文件
+				String path = fileInfo.getFile().getPath();
+				path = path.substring(webapp.length());
+				String temp;
+				if (path.startsWith(FileUtils.getSystemFileSeparator())) {
+					temp = out + path;
+				} else {
+					temp = out + FileUtils.getSystemFileSeparator() + path;
+				}
+				File destOriginalFile = new File(temp);
+				destOriginalFile.setLastModified(fileInfo.getFile().lastModified());
 			}
 		}
 	}

@@ -64,13 +64,14 @@ public class JCVFactoryTest {
 //        config.setDomains(Collections.<String>emptyList());
 //        config.setMethod(MethodEnum.MD5_METHOD);
 //        config.setSuffix(Arrays.asList("jsp","css"));
-//        config.setOutDirRoot("C:\\Users\\toben\\Downloads\\echemi_web_en_test");
+//        config.setOutDirRoot("C:\\Users\\Jacob\\Downloads\\echemi_web_en_test");
 //        config.setCdnJsElName("webRootStaticCdn");
 //        config.setCdnCssElName("webRootStaticCdn");
 //        config.setCdnImageElName("webRootStaticCdn");
 //        config.setElNameIncludePath("static_v3");
 //        config.setCompressOutput(true);
 //        config.setInName(true);
+//        config.setVersionLength(6);
 //
 //        ProcessFactory processFactory=new DefaultProcessFactory(config);
 //        processFactory.buildLoggerFactory(logger);
